@@ -5,6 +5,16 @@
 
 namespace rebind
 {
+    template <typename T, std::size_t I>
+    struct member
+    {
+        std::string_view name;
+
+      public:
+        using type                  = T;
+        static constexpr auto index = I;
+    };
+
     namespace impl
     {
         template <std::size_t I>
@@ -40,16 +50,6 @@ namespace rebind
 
             return end;
         }
-
-        template <typename T, std::size_t I>
-        struct member
-        {
-            std::string_view name;
-
-          public:
-            using type                  = T;
-            static constexpr auto index = I;
-        };
 
 #ifdef __clang__
 #pragma clang diagnostic push

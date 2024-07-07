@@ -16,6 +16,14 @@ namespace rebind
         requires std::is_enum_v<T>
     static constexpr std::underlying_type_t<T> enum_find_max = 128;
 
+    template <typename T>
+        requires std::is_enum_v<T>
+    struct enum_field
+    {
+        T value;
+        std::string_view name;
+    };
+
     namespace impl
     {
         static constexpr std::string_view enum_start = "::";
@@ -67,14 +75,6 @@ namespace rebind
 
         template <typename T>
             requires std::is_enum_v<T>
-        struct enum_field
-        {
-            T value;
-            std::string_view name;
-        };
-
-        template <typename T>
-            requires std::is_enum_v<T>
         consteval auto to_tuple()
         {
             constexpr auto min = enum_min<T>();
@@ -123,7 +123,7 @@ namespace rebind
 
     template <typename T>
         requires std::is_enum_v<T>
-    constexpr std::optional<impl::enum_field<T>> enum_value(T value)
+    constexpr std::optional<enum_field<T>> enum_value(T value)
     {
         constexpr auto fields = enum_values<T>;
         const auto rtn        = std::ranges::find_if(fields, [&](auto &&x) { return x.value == value; });
