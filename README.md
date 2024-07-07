@@ -29,9 +29,9 @@ _Rebind_ is a simple header-only C++20 reflection library for aggregates and enu
 
 ## 📖 Examples
 
-https://github.com/Curve/rebind/blob/7de073bd4736900193f6af5c543a3cf62e6f1a73/tests/name.test.cpp#L9-L11
-https://github.com/Curve/rebind/blob/9ee66d3cc9e8976d5d8a40856d7ee5a09d32c415/tests/enum.test.cpp#L22-L33
-https://github.com/Curve/rebind/blob/9ee66d3cc9e8976d5d8a40856d7ee5a09d32c415/tests/member.test.cpp#L37-L45
+https://github.com/Curve/rebind/blob/d8b79fa7a8fe0fd155f0f7c2f896052649210b26/tests/name.test.cpp#L9-L11
+https://github.com/Curve/rebind/blob/d8b79fa7a8fe0fd155f0f7c2f896052649210b26/tests/enum.test.cpp#L22-L33
+https://github.com/Curve/rebind/blob/d8b79fa7a8fe0fd155f0f7c2f896052649210b26/tests/member.test.cpp#L37-L45
 
 > 🧪 For more examples see [tests](tests/)
 
