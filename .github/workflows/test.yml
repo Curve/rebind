@@ -18,11 +18,11 @@ jobs:
         include:
           - type: gcc
             container: alpine:latest
-            deps: apk add git cmake g++ ninja-build
+            deps: apk add git cmake gcc g++ ninja-build make
 
           - type: clang
             container: alpine:latest
-            deps: apk add git cmake clang-18 ninja-build
+            deps: apk add git cmake clang18 ninja-build make
 
           - type: clang-cl
             cmake_args: -T ClangCL -A x64
@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ (contains(matrix.type, 'msvc') || contains(matrix.type, 'clang-cl')) && 'windows-latest' || 'ubuntu-latest' }}
     container: ${{ matrix.container }}
 
-    name: "${{ matrix.type }} (💾: ${{ matrix.arch }}, ⚙️: ${{ matrix.config }})"
+    name: "${{ matrix.type }} (⚙️: ${{ matrix.config }})"
 
     steps:
       - name: 📦 Checkout
