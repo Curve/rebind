@@ -18,11 +18,11 @@ jobs:
         include:
           - type: gcc
             container: alpine:latest
-            deps: aok add git cmake g++ ninja-build
+            deps: apk add git cmake g++ ninja-build
 
           - type: clang
             container: alpine:latest
-            deps: aok add git cmake clang-18 ninja-build
+            deps: apk add git cmake clang-18 ninja-build
 
           - type: clang-cl
             cmake_args: -T ClangCL -A x64
