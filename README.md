@@ -4,7 +4,7 @@
 
 ## 📃 Description
 
-_Rebind_ is a simple header-only C++20 reflection library for aggregates and enums.
+_Rebind_ is a simple, tiny C++20 reflection library for aggregates and enums.
 
 > [!WARNING]  
 > This library requires a fairly recent compiler. It has been tested on:  
