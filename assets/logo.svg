@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="100mm"
-   height="50mm"
-   viewBox="0 0 100 50"
+   width="60mm"
+   height="20mm"
+   viewBox="0 0 60 20"
    version="1.1"
    id="svg1"
    inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
@@ -24,14 +24,14 @@
      inkscape:pagecheckerboard="1"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="3.1345226"
-     inkscape:cx="199.23289"
-     inkscape:cy="130.6419"
-     inkscape:window-width="1297"
-     inkscape:window-height="933"
+     inkscape:zoom="6.2690452"
+     inkscape:cx="143.2435"
+     inkscape:cy="82.787727"
+     inkscape:window-width="2560"
+     inkscape:window-height="1416"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="0"
+     inkscape:window-maximized="1"
      inkscape:current-layer="g148" />
   <defs
      id="defs1">
@@ -50,35 +50,35 @@
     <rect
        x="115.726"
        y="62.261944"
-       width="234.61022"
+       width="234.61021"
        height="26.39365"
        id="rect29" />
     <rect
        x="122.49361"
-       y="72.864521"
-       width="188.81611"
-       height="53.012887"
+       y="72.864517"
+       width="188.81612"
+       height="53.012886"
        id="rect28" />
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
        inkscape:vp_x="-14.62212 : -1.7906932e-15 : 0"
-       inkscape:vp_y="1.6195152e-14 : -264.4869 : 0"
-       inkscape:vp_z="-6.4765988 : -3.3213782 : 0"
-       inkscape:persp3d-origin="80.997577 : 41.50707 : 1"
+       inkscape:vp_y="1.6195152e-14 : -264.48689 : 0"
+       inkscape:vp_z="-6.4765989 : -3.3213781 : 0"
+       inkscape:persp3d-origin="63.73931 : 24.961069 : 1"
        id="perspective28" />
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="29.538588 : 44.935289 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="52.905005 : 48.516479 : 1"
-       inkscape:persp3d-origin="51.704522 : 16.666667 : 1"
+       inkscape:vp_x="29.538588 : 14.935289 : 1"
+       inkscape:vp_y="0 : 999.99998 : 0"
+       inkscape:vp_z="52.905006 : 18.516479 : 1"
+       inkscape:persp3d-origin="51.704523 : -13.333333 : 1"
        id="perspective7" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient141"
        id="linearGradient142"
-       x1="66.898352"
-       y1="24.609227"
+       x1="66.898354"
+       y1="24.609226"
        x2="73.168076"
        y2="21.266783"
        gradientUnits="userSpaceOnUse" />
@@ -87,61 +87,61 @@
        xlink:href="#linearGradient141"
        id="linearGradient143"
        gradientUnits="userSpaceOnUse"
-       x1="66.898352"
-       y1="24.609227"
+       x1="66.898354"
+       y1="24.609226"
        x2="73.168076"
        y2="21.266783"
-       gradientTransform="translate(-3.3553773,0.22270619)" />
+       gradientTransform="translate(-85.091711,-27.081949)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient141"
        id="linearGradient144"
        gradientUnits="userSpaceOnUse"
-       x1="66.898352"
-       y1="24.609227"
+       x1="66.898354"
+       y1="24.609226"
        x2="73.168076"
        y2="21.266783"
-       gradientTransform="translate(-3.3553773,0.22270619)" />
+       gradientTransform="translate(-85.091711,-27.081949)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient141"
        id="linearGradient145"
        gradientUnits="userSpaceOnUse"
-       x1="66.898352"
-       y1="24.609227"
+       x1="66.898354"
+       y1="24.609226"
        x2="73.168076"
        y2="21.266783"
-       gradientTransform="translate(-3.3553773,0.22270619)" />
+       gradientTransform="translate(-85.091711,-27.081949)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient141"
        id="linearGradient146"
        gradientUnits="userSpaceOnUse"
-       x1="66.898352"
-       y1="24.609227"
+       x1="66.898354"
+       y1="24.609226"
        x2="73.168076"
        y2="21.266783"
-       gradientTransform="translate(-3.3553773,0.22270619)" />
+       gradientTransform="translate(-85.091711,-27.081949)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient141"
        id="linearGradient147"
        gradientUnits="userSpaceOnUse"
-       x1="66.898352"
-       y1="24.609227"
+       x1="66.898354"
+       y1="24.609226"
        x2="73.168076"
        y2="21.266783"
-       gradientTransform="translate(-3.3553773,0.22270619)" />
+       gradientTransform="translate(-85.091711,-27.081949)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient141"
        id="linearGradient148"
        gradientUnits="userSpaceOnUse"
-       x1="66.898352"
-       y1="24.609227"
+       x1="66.898354"
+       y1="24.609226"
        x2="73.168076"
        y2="21.266783"
-       gradientTransform="translate(-3.3553773,0.22270619)" />
+       gradientTransform="translate(-85.091711,-27.081949)" />
   </defs>
   <g
      id="g148"
@@ -149,21 +149,21 @@
      inkscape:label="Logo">
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-10.985824,5.2493632)"
+       transform="matrix(0.26458333,0,0,0.26458333,-28.187311,-8.6012927)"
        id="text28"
        style="font-style:normal;font-weight:normal;font-size:18.6667px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect29);display:inline;fill:#000000;fill-opacity:1;stroke:none"
        inkscape:label="Text"><tspan
          x="115.72656"
          y="79.497044"
-         id="tspan10"><tspan
+         id="tspan5"><tspan
            style="fill:#7d5fff"
-           id="tspan6">rebind</tspan><tspan
+           id="tspan1">rebind</tspan><tspan
            style="font-family:'Cascadia Mono';-inkscape-font-specification:'Cascadia Mono'"
-           id="tspan7">::</tspan><tspan
+           id="tspan2">::</tspan><tspan
            style="fill:#c56cf0"
-           id="tspan8">inspect</tspan><tspan
+           id="tspan3">inspect</tspan><tspan
            style="font-family:'Cascadia Mono';-inkscape-font-specification:'Cascadia Mono'"
-           id="tspan9">&lt;    &gt;</tspan></tspan></text>
+           id="tspan4">&lt;    &gt;</tspan></tspan></text>
     <g
        sodipodi:type="inkscape:box3d"
        id="g135"
@@ -177,43 +177,43 @@
          id="path137"
          style="fill:#000000;fill-opacity:0.115727;fill-rule:evenodd;stroke:url(#linearGradient143);stroke-width:0.5;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          inkscape:box3dsidetype="3"
-         d="m 63.792973,27.24255 6.807696,0 0,-7.321665 h -6.807696 z"
-         points="70.600669,27.24255 70.600669,19.920885 63.792973,19.920885 63.792973,27.24255 " />
+         d="m 46.534705,13.78855 6.807696,0 0,-7.3216646 h -6.807696 z"
+         points="53.342401,13.78855 53.342401,6.4668854 46.534705,6.4668854 46.534705,13.78855 " />
       <path
          sodipodi:type="inkscape:box3dside"
          id="path135"
          style="fill:#000000;fill-opacity:0.115727;fill-rule:evenodd;stroke:url(#linearGradient144);stroke-width:0.5;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          inkscape:box3dsidetype="6"
-         d="M 63.792973,27.24255 V 19.920885 L 61.25,21.224992 v 7.321665 z"
-         points="63.792973,19.920885 61.25,21.224992 61.25,28.546657 63.792973,27.24255 " />
+         d="M 46.534705,13.78855 V 6.4668854 L 43.991732,7.770992 v 7.321665 z"
+         points="46.534705,6.4668854 43.991732,7.770992 43.991732,15.092657 46.534705,13.78855 " />
       <path
          sodipodi:type="inkscape:box3dside"
          id="path136"
          style="fill:#000000;fill-opacity:0.115727;fill-rule:evenodd;stroke:url(#linearGradient145);stroke-width:0.5;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          inkscape:box3dsidetype="5"
-         d="m 63.792973,27.24255 6.807696,0 -2.542973,1.304107 -6.807696,0 z"
-         points="70.600669,27.24255 68.057696,28.546657 61.25,28.546657 63.792973,27.24255 " />
+         d="m 46.534705,13.78855 6.807696,0 -2.542973,1.304107 -6.807696,0 z"
+         points="53.342401,13.78855 50.799428,15.092657 43.991732,15.092657 46.534705,13.78855 " />
       <path
          sodipodi:type="inkscape:box3dside"
          id="path139"
          style="fill:#000000;fill-opacity:0.115727;fill-rule:evenodd;stroke:url(#linearGradient146);stroke-width:0.5;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          inkscape:box3dsidetype="13"
-         d="m 63.792973,19.920885 h 6.807696 l -2.542973,1.304107 H 61.25 Z"
-         points="70.600669,19.920885 68.057696,21.224992 61.25,21.224992 63.792973,19.920885 " />
+         d="m 46.534705,6.4668854 h 6.807696 L 50.799428,7.770992 h -6.807696 z"
+         points="53.342401,6.4668854 50.799428,7.770992 43.991732,7.770992 46.534705,6.4668854 " />
       <path
          sodipodi:type="inkscape:box3dside"
          id="path138"
          style="fill:#000000;fill-opacity:0.115727;fill-rule:evenodd;stroke:url(#linearGradient147);stroke-width:0.5;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          inkscape:box3dsidetype="14"
-         d="m 70.600669,27.24255 0,-7.321665 -2.542973,1.304107 v 7.321665 z"
-         points="70.600669,19.920885 68.057696,21.224992 68.057696,28.546657 70.600669,27.24255 " />
+         d="m 53.342401,13.78855 0,-7.3216646 -2.542973,1.3041066 0,7.321665 z"
+         points="53.342401,6.4668854 50.799428,7.770992 50.799428,15.092657 53.342401,13.78855 " />
       <path
          sodipodi:type="inkscape:box3dside"
          id="path140"
          style="fill:#000000;fill-opacity:0.115727;fill-rule:evenodd;stroke:url(#linearGradient148);stroke-width:0.5;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          inkscape:box3dsidetype="11"
-         d="m 61.25,28.546657 6.807696,0 V 21.224992 H 61.25 Z"
-         points="68.057696,28.546657 68.057696,21.224992 61.25,21.224992 61.25,28.546657 " />
+         d="m 43.991732,15.092657 6.807696,0 0,-7.321665 h -6.807696 z"
+         points="50.799428,15.092657 50.799428,7.770992 43.991732,7.770992 43.991732,15.092657 " />
     </g>
   </g>
 </svg>
