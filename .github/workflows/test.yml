@@ -22,7 +22,7 @@ jobs:
 
           - type: clang
             container: alpine:latest
-            deps: apk add git cmake llvm18 clang18 ninja-build make
+            deps: apk add git cmake clang ninja-build make
 
           - type: clang-cl
             cmake_args: -T ClangCL -A x64
