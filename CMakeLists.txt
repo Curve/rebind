@@ -35,7 +35,7 @@ CPMFindPackage(
   GIT_REPOSITORY "https://github.com/boostorg/preprocessor"
 )
 
-target_link_libraries(${PROJECT_NAME} INTERFACE boost_preprocessor)
+target_link_libraries(${PROJECT_NAME} INTERFACE Boost::preprocessor)
 
 # --------------------------------------------------------------------------------------------------------
 # Run tests
