@@ -26,9 +26,8 @@ include("../cmake/cpm.cmake")
 
 CPMFindPackage(
   NAME           ut
-  # https://github.com/boost-ext/ut/pull/572 is required for alpine
-  GIT_TAG        99f7c532466a2c559a5c82df0c495203c3bb3950
-  GIT_REPOSITORY "https://github.com/R2RT/ut"
+  GIT_TAG        fb06064
+  GIT_REPOSITORY "https://github.com/boost-ext/ut"
   OPTIONS        "BOOST_UT_DISABLE_MODULE ON"
 )
 
