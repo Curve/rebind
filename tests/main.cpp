@@ -1,6 +1,6 @@
 #include <boost/ut.hpp>
 
-int main()
+int main(int argc, const char **argv)
 {
-    return boost::ut::cfg<boost::ut::override>.run();
+    return boost::ut::cfg<>.run({.argc = argc, .argv = argv});
 }
