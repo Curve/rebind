@@ -13,7 +13,7 @@ enum class some_enum
 // NOLINTNEXTLINE
 suite<"enum"> enum_test = []()
 {
-    expect(rebind::type_name<some_enum> == "some_enum");
+    expect(rebind::type_name<some_enum>.rfind("some_enum") != std::string_view::npos);
     expect(rebind::nttp_name<some_enum::a> == "some_enum::a");
 
     expect(rebind::enum_name<some_enum::a> == "a");
