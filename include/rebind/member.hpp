@@ -71,8 +71,8 @@ namespace rebind
         template <typename... Ts>
         consteval auto make_array(Ts &&...values)
         {
-            // We need this helper because msvc is retarded...
-            // https://developercommunity.visualstudio.com/t/Error-calling-consteval-function-from-an/1669482
+            // We need this helper because msvc is retarded. The following issue seems related but is not quite the
+            // same: https://developercommunity.visualstudio.com/t/Error-calling-consteval-function-from-an/1669482
 
             return std::array{std::forward<Ts>(values)...};
         }
