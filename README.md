@@ -114,7 +114,7 @@ static constexpr auto enum_name = /*...*/;
 
 ```cpp
 template <typename T>
-static constexpr auto enum_values = impl::enum_values<T>();
+static constexpr auto enum_values = /*...*/;
 ```
 
 > **Returns**: All possible values of the given enum `T`
