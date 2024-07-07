@@ -123,7 +123,7 @@ template <typename T>
 static constexpr auto enum_values = /*...*/;
 ```
 
-> **Returns**: All possible values of the given enum `T`
+> **Returns**: All possible values of the given enum `T`  
 > **Contains**: The enum `value` and `name`
 
 ```cpp
