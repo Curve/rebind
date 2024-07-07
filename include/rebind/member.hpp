@@ -85,7 +85,7 @@ namespace rebind
                 return make_array(inspect<T, I>().name...);
             };
 
-            return unpack(std::make_index_sequence<arity<T>()>());
+            return unpack(std::make_index_sequence<rebind::arity<T>>());
         }
     } // namespace impl
 
