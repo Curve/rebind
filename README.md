@@ -6,6 +6,12 @@
 
 _Rebind_ is a simple header-only C++20 reflection library for aggregates and enums.
 
+> [!WARNING]  
+> This library requires a fairly recent compiler. It has been tested on:  
+> * MSVC <kbd>>=19.40</kbd>
+> * GCC <kbd>>=13</kbd>
+> * clang <kbd>>=17</kbd>
+
 ## 📦 Installation
 
 * Using [CPM](https://github.com/cpm-cmake/CPM.cmake)
