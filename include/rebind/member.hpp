@@ -47,8 +47,8 @@ namespace rebind
             std::string_view name;
 
           public:
-            index_constant<I> num;
-            std::type_identity<T> type;
+            using type                  = T;
+            static constexpr auto index = I;
         };
 
 #ifdef __clang__
@@ -62,11 +62,7 @@ namespace rebind
             constexpr auto &field = get<I>(external<T>);
             using field_t         = std::decay_t<decltype(field)>;
 
-            return member{
-                member_name<pointer{&field}>(),
-                index_constant<I>{},
-                std::type_identity<field_t>{},
-            };
+            return member<field_t, I>{member_name<pointer{&field}>()};
         }
 #ifdef __clang__
 #pragma clang diagnostic pop

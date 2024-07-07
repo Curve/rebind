@@ -29,10 +29,12 @@ suite<"member"> member_test = []()
     expect(names.at(3) == "inner");
 
     constexpr auto field = rebind::inspect<simple, 1>;
+    using field_t        = decltype(field);
 
-    expect(field.num == 1);
     expect(field.name == "y");
-    expect(std::is_same_v<decltype(field.type)::type, float>);
+
+    expect(eq(field_t::index, 1));
+    expect(std::is_same_v<field_t::type, float>);
 
     simple instance{1, 2, 3, {true}};
 
@@ -54,39 +56,38 @@ suite<"member"> member_test = []()
     expect(!instance.inner.test);
 
     rebind::visit(instance,
-                  []<typename T>(T &value, const auto &meta)
+                  []<typename T, typename M>(T &value, const M &meta)
                   {
-                      using decayed   = std::decay_t<decltype(value)>;
-                      using meta_type = typename decltype(meta.type)::type;
+                      using type = M::type;
 
-                      if constexpr (std::is_arithmetic_v<decayed>)
+                      if constexpr (std::is_arithmetic_v<T>)
                       {
                           if (meta.name == "x")
                           {
                               expect(eq(value, 500));
-                              expect(eq(meta.num, 0));
-                              expect(std::is_same_v<meta_type, int>);
+                              expect(eq(meta.index, 0));
+                              expect(std::is_same_v<type, int>);
                           }
                           else if (meta.name == "y")
                           {
                               expect(eq(value, 2));
-                              expect(eq(meta.num, 1));
-                              expect(std::is_same_v<meta_type, float>);
+                              expect(eq(meta.index, 1));
+                              expect(std::is_same_v<type, float>);
                           }
                           else if (meta.name == "z")
                           {
                               expect(eq(value, 3));
-                              expect(eq(meta.num, 2));
-                              expect(std::is_same_v<meta_type, double>);
+                              expect(eq(meta.index, 2));
+                              expect(std::is_same_v<type, double>);
                           }
                       }
                       else
                       {
                           expect(meta.name == "inner");
 
-                          expect(eq(meta.num, 3));
+                          expect(eq(meta.index, 3));
                           expect(eq(value.test, false));
-                          expect(std::is_aggregate_v<meta_type>);
+                          expect(std::is_aggregate_v<type>);
                       }
                   });
 };
