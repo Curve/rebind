@@ -19,11 +19,11 @@ namespace rebind
             const T *value;
         };
 
-#if defined(_MSC_VER)
-        static constexpr std::string_view member_start = "->";
-        static constexpr std::string_view member_end   = "}";
-#elif defined(__clang__)
+#if defined(__clang__)
         static constexpr std::string_view member_start = "external.";
+        static constexpr std::string_view member_end   = "}";
+#elif defined(_MSC_VER)
+        static constexpr std::string_view member_start = "->";
         static constexpr std::string_view member_end   = "}";
 #else
         static constexpr std::string_view member_start = "::";

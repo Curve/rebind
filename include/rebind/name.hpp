@@ -9,12 +9,12 @@ namespace rebind
 {
     namespace impl
     {
-#ifdef _MSC_VER
-        static constexpr std::string_view nttp_start = "mangled_name<";
-        static constexpr std::string_view nttp_end   = ">";
-#else
+#if defined(__clang__) || defined(__GNUC__)
         static constexpr std::string_view nttp_start = "T = ";
         static constexpr std::string_view nttp_end   = "]";
+#else
+        static constexpr std::string_view nttp_start = "mangled_name<";
+        static constexpr std::string_view nttp_end   = ">";
 #endif
 
         static constexpr std::string_view type_start = "type_identity<";
