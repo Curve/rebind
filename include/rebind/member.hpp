@@ -72,12 +72,21 @@ namespace rebind
 #pragma clang diagnostic pop
 #endif
 
+        template <typename... Ts>
+        consteval auto make_array(Ts &&...values)
+        {
+            // We need this helper because msvc is retarded...
+            // https://developercommunity.visualstudio.com/t/Error-calling-consteval-function-from-an/1669482
+
+            return std::array{std::forward<Ts>(values)...};
+        }
+
         template <typename T>
         consteval auto member_names()
         {
             auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
             {
-                return std::array{inspect<T, I>().name...};
+                return make_array(inspect<T, I>().name...);
             };
 
             return unpack(std::make_index_sequence<arity<T>()>());

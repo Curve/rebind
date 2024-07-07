@@ -49,9 +49,16 @@ namespace rebind
         return std::tie(BOOST_PP_ENUM_PARAMS(_N, mem_));                                                               \
     }
 
-        BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_LIMIT_MAG, REBIND_GET_N, EMPTY);
+#if defined(_MSC_VER)
+#define REBIND_GET_LIMIT 128
+#else
+#define REBIND_GET_LIMIT BOOST_PP_LIMIT_MAG
+#endif
+
+        BOOST_PP_REPEAT_FROM_TO(1, REBIND_GET_LIMIT, REBIND_GET_N, 0);
 
 #undef REBIND_GET_N
+#undef REBIND_GET_LIMIT
     }
 
     template <std::size_t I, typename T>
