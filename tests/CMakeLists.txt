@@ -32,3 +32,11 @@ CPMFindPackage(
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Boost::ut cr::rebind)
+
+# --------------------------------------------------------------------------------------------------------
+# Add Test-Target
+# --------------------------------------------------------------------------------------------------------
+
+include(CTest)
+
+add_test(NAME rebind-tests COMMAND $<TARGET_FILE:${PROJECT_NAME}>)
