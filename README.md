@@ -102,7 +102,7 @@ static constexpr auto member_names = /*...*/;
 ```cpp
 template <typename T, typename Fn>
     requires std::is_aggregate_v<T>
-constexpr auto visit(T &value, Fn &&callback)
+constexpr auto visit(T &value, Fn &&callback);
 ```
 
 > **Brief**: Calls `callback` with all members of `value`  
