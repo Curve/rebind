@@ -27,7 +27,7 @@ namespace rebind
         static constexpr std::string_view enum_prefix = "enum ";
 
         template <auto T>
-        consteval std::string_view mangled_name()
+        consteval auto mangled_name()
         {
             return std::source_location::current().function_name();
         }
@@ -35,7 +35,7 @@ namespace rebind
         template <typename T>
         consteval auto type_name()
         {
-            constexpr auto mangled = mangled_name<std::type_identity<T>{}>();
+            constexpr std::string_view mangled = mangled_name<std::type_identity<T>{}>();
 
             constexpr auto start = mangled.substr(mangled.find(type_start) + type_start.size());
             constexpr auto end   = start.substr(0, start.rfind(type_end));
@@ -53,7 +53,7 @@ namespace rebind
         template <auto T>
         consteval auto nttp_name()
         {
-            constexpr auto mangled = mangled_name<T>();
+            constexpr std::string_view mangled = mangled_name<T>();
 
             constexpr auto start = mangled.substr(mangled.find(nttp_start) + nttp_start.size());
             constexpr auto end   = start.substr(0, start.rfind(nttp_end));
