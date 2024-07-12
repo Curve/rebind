@@ -32,16 +32,19 @@ namespace rebind
             requires std::is_enum_v<decltype(T)>
         consteval auto enum_name()
         {
-            constexpr auto name  = rebind::nttp_name<T>;
-            constexpr auto delim = name.find(enum_start);
+            constexpr auto name = rebind::nttp_name<T>;
+            constexpr auto type = rebind::type_name<decltype(T)>;
 
-            if constexpr (delim == std::string_view::npos)
+            constexpr auto start = name.substr(name.rfind(type) + type.size());
+            constexpr auto end   = start.rfind(enum_start);
+
+            if constexpr (end == std::string_view::npos)
             {
                 return std::string_view{};
             }
             else
             {
-                return name.substr(delim + enum_start.size());
+                return start.substr(end + enum_start.size());
             }
         }
 
