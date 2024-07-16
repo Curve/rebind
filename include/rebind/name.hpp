@@ -9,22 +9,9 @@ namespace rebind
 {
     namespace impl
     {
-#if defined(__clang__) || defined(__GNUC__)
-        static constexpr std::string_view nttp_start = "T = ";
-        static constexpr std::string_view nttp_end   = "]";
-#else
-        static constexpr std::string_view nttp_start = "mangled_name<";
-        static constexpr std::string_view nttp_end   = ">";
-#endif
-
-        static constexpr std::string_view type_start = "type_identity<";
-#if defined(_MSC_VER) || defined(__clang__)
-        static constexpr std::string_view type_end = ">{}";
-#else
-        static constexpr std::string_view type_end = ">()";
-#endif
-
-        static constexpr std::string_view enum_prefix = "enum ";
+        enum reference_impl
+        {
+        };
 
         template <auto T>
         consteval auto mangled_name()
@@ -32,33 +19,74 @@ namespace rebind
             return std::source_location::current().function_name();
         }
 
-        template <typename T>
-        consteval auto type_name()
+        static constexpr auto unmangle_nttp_impl = []()
         {
-            constexpr std::string_view mangled = mangled_name<std::type_identity<T>{}>();
+            constexpr std::string_view mangled = mangled_name<true>();
+            constexpr std::string_view to_find = "true";
 
-            constexpr auto start = mangled.substr(mangled.find(type_start) + type_start.size());
-            constexpr auto end   = start.substr(0, start.rfind(type_end));
+            constexpr auto start = mangled.find(to_find);
 
-            if constexpr (end.starts_with(enum_prefix))
-            {
-                return end.substr(enum_prefix.size());
-            }
-            else
-            {
-                return end;
-            }
+            constexpr auto prefix = mangled.substr(0, start);
+            constexpr auto suffix = mangled.substr(start + to_find.size());
+
+            return std::make_pair(prefix, suffix);
+        };
+
+        static constexpr auto unmangle_type_impl = []()
+        {
+            constexpr std::string_view mangled = mangled_name<std::type_identity<int>{}>();
+            constexpr std::string_view to_find = "int";
+
+            constexpr auto start = mangled.find(to_find);
+
+            constexpr auto prefix = mangled.substr(0, start);
+            constexpr auto suffix = mangled.substr(start + to_find.size());
+
+            return std::make_pair(prefix, suffix);
+        };
+
+        static constexpr auto unmangle_enum_impl = []()
+        {
+            constexpr std::string_view mangled = mangled_name<std::type_identity<reference_impl>{}>();
+            constexpr std::string_view to_find = "reference_impl";
+
+            constexpr auto start = mangled.find(to_find);
+
+            constexpr auto prefix = mangled.substr(0, start);
+            constexpr auto suffix = mangled.substr(start + to_find.size());
+
+            return std::make_pair(prefix, suffix);
+        };
+
+        template <auto T, auto Func>
+        consteval auto unmangle()
+        {
+            constexpr std::string_view mangled = mangled_name<T>();
+            constexpr auto decorators          = Func();
+
+            constexpr auto start = mangled.substr(decorators.first.size());
+            constexpr auto end   = start.substr(0, start.rfind(decorators.second));
+
+            return end;
         }
 
         template <auto T>
         consteval auto nttp_name()
         {
-            constexpr std::string_view mangled = mangled_name<T>();
+            return unmangle<T, unmangle_nttp_impl>();
+        }
 
-            constexpr auto start = mangled.substr(mangled.find(nttp_start) + nttp_start.size());
-            constexpr auto end   = start.substr(0, start.rfind(nttp_end));
+        template <typename T>
+        consteval auto type_name()
+        {
+            return unmangle<std::type_identity<T>{}, unmangle_type_impl>();
+        }
 
-            return end;
+        template <typename T>
+            requires std::is_enum_v<T>
+        consteval auto type_name()
+        {
+            return unmangle<std::type_identity<T>{}, unmangle_enum_impl>();
         }
     } // namespace impl
 
