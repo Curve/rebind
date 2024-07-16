@@ -4,7 +4,8 @@
 
 ## 📃 Description
 
-_Rebind_ is a simple, tiny C++20 reflection library for aggregates and enums.
+_Rebind_ is a simple, tiny C++20 reflection library for aggregates and enums.  
+This library is fully compiler agnostic as it figures out how to demangle given types at compile time.
 
 > [!WARNING]  
 > This library requires a fairly recent compiler. It has been tested on:  
