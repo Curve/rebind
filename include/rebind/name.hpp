@@ -9,7 +9,7 @@ namespace rebind
 {
     namespace impl
     {
-        enum reference_impl
+        enum enum_ref
         {
         };
 
@@ -47,13 +47,14 @@ namespace rebind
 
         static constexpr auto unmangle_enum_impl = []()
         {
-            constexpr std::string_view mangled = mangled_name<std::type_identity<reference_impl>{}>();
-            constexpr std::string_view to_find = "reference_impl";
+            constexpr std::string_view mangled = mangled_name<std::type_identity<rebind::impl::enum_ref>{}>();
+            constexpr std::string_view to_find = "enum_ref";
 
-            constexpr auto start = mangled.find(to_find);
+            constexpr auto occurrence = mangled.find(to_find);
+            constexpr auto start      = mangled.substr(0, occurrence).find_last_of(" <") + 1;
 
             constexpr auto prefix = mangled.substr(0, start);
-            constexpr auto suffix = mangled.substr(start + to_find.size());
+            constexpr auto suffix = mangled.substr(occurrence + to_find.size());
 
             return std::make_pair(prefix, suffix);
         };
