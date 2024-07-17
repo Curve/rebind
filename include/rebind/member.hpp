@@ -53,21 +53,21 @@ namespace rebind
 #endif
         static constexpr auto unmangle_member_impl = []()
         {
-            constexpr auto &ref                       = get<0>(external<some_ref>);
-            static constexpr std::string_view mangled = rebind::impl::mangled_name<pointer{&ref}>();
+            constexpr auto &ref                = get<0>(external<some_ref>);
+            constexpr std::string_view mangled = rebind::impl::mangled_name<pointer{&ref}>();
 
-            static constexpr std::string_view field    = "find_me";
-            static constexpr std::string_view instance = "external";
-            static constexpr std::string_view type     = "some_ref";
+            constexpr std::string_view field    = "find_me";
+            constexpr std::string_view instance = "external";
+            constexpr std::string_view type     = "some_ref";
 
-            static constexpr auto field_occurrence    = mangled.find(field);
-            static constexpr auto type_occurrence     = mangled.rfind(type, field_occurrence);
-            static constexpr auto instance_occurrence = mangled.rfind(instance, field_occurrence);
+            constexpr auto field_occurrence    = mangled.find(field);
+            constexpr auto type_occurrence     = mangled.rfind(type, field_occurrence);
+            constexpr auto instance_occurrence = mangled.rfind(instance, field_occurrence);
 
-            static constexpr auto start = max(instance_occurrence, type_occurrence + type.size());
+            constexpr auto start = max(instance_occurrence, type_occurrence + type.size());
 
-            static constexpr auto prefix = mangled.substr(start, field_occurrence - start);
-            static constexpr auto suffix = mangled.substr(field_occurrence + field.size());
+            constexpr auto prefix = mangled.substr(start, field_occurrence - start);
+            constexpr auto suffix = mangled.substr(field_occurrence + field.size());
 
             return std::make_pair(prefix, suffix);
         };
@@ -82,8 +82,8 @@ namespace rebind
             requires std::is_aggregate_v<T>
         consteval auto inspect()
         {
-            static constexpr auto &field = get<I>(external<T>);
-            using field_t                = std::decay_t<decltype(field)>;
+            constexpr auto &field = get<I>(external<T>);
+            using field_t         = std::decay_t<decltype(field)>;
 
             return member<field_t, I>{member_name<pointer{&field}>()};
         }
@@ -103,7 +103,7 @@ namespace rebind
         template <typename T>
         consteval auto member_names()
         {
-            static constexpr auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
+            auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
             {
                 return make_array(inspect<T, I>().name...);
             };
@@ -122,7 +122,7 @@ namespace rebind
         requires std::is_aggregate_v<T>
     constexpr auto visit(T &value, Fn &&callback)
     {
-        static auto unpack = [&]<std::size_t... I>(std::index_sequence<I...>)
+        auto unpack = [&]<std::size_t... I>(std::index_sequence<I...>)
         {
             (callback(get<I>(value), inspect<T, I>), ...);
         };
