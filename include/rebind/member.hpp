@@ -17,9 +17,6 @@ namespace rebind
 
     namespace impl
     {
-        template <std::size_t I>
-        using index_constant = std::integral_constant<std::size_t, I>;
-
         template <typename T>
         extern T external;
 
@@ -29,32 +26,58 @@ namespace rebind
             const T *value;
         };
 
-#if defined(__clang__)
-        static constexpr std::string_view member_start = "external.";
-        static constexpr std::string_view member_end   = "}";
-#elif defined(_MSC_VER)
-        static constexpr std::string_view member_start = "->";
-        static constexpr std::string_view member_end   = "}";
-#else
-        static constexpr std::string_view member_start = "::";
-        static constexpr std::string_view member_end   = "))}";
-#endif
-
-        template <pointer T>
-        consteval auto member_name()
+        struct some_ref
         {
-            constexpr auto name = rebind::nttp_name<T>;
+            int find_me;
+        };
 
-            constexpr auto start = name.substr(name.rfind(member_start) + member_start.size());
-            constexpr auto end   = start.substr(0, start.rfind(member_end));
+        template <typename T>
+        consteval auto max(const T &first, const T &second)
+        {
+            if (first == std::string_view::npos)
+            {
+                return second;
+            }
 
-            return end;
+            if (second == std::string_view::npos)
+            {
+                return first;
+            }
+
+            return first > second ? first : second;
         }
 
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 #endif
+        static constexpr auto unmangle_member_impl = []()
+        {
+            constexpr auto &ref                = get<0>(external<some_ref>);
+            constexpr std::string_view mangled = rebind::impl::mangled_name<pointer{&ref}>();
+
+            constexpr std::string_view field    = "find_me";
+            constexpr std::string_view instance = "external";
+            constexpr std::string_view type     = "some_ref";
+
+            constexpr auto field_occurrence    = mangled.find(field);
+            constexpr auto type_occurrence     = mangled.rfind(type, field_occurrence);
+            constexpr auto instance_occurrence = mangled.rfind(instance, field_occurrence);
+
+            constexpr auto start = max(instance_occurrence, type_occurrence + type.size());
+
+            constexpr auto prefix = mangled.substr(start, field_occurrence - start);
+            constexpr auto suffix = mangled.substr(field_occurrence + field.size());
+
+            return std::make_pair(prefix, suffix);
+        };
+
+        template <pointer T>
+        consteval auto member_name()
+        {
+            return unmangle<T, unmangle_member_impl>();
+        }
+
         template <typename T, std::size_t I>
             requires std::is_aggregate_v<T>
         consteval auto inspect()

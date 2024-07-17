@@ -65,7 +65,7 @@ namespace rebind
             constexpr std::string_view mangled = mangled_name<T>();
             constexpr auto decorators          = Func();
 
-            constexpr auto start = mangled.substr(decorators.first.size());
+            constexpr auto start = mangled.substr(mangled.rfind(decorators.first) + decorators.first.size());
             constexpr auto end   = start.substr(0, start.rfind(decorators.second));
 
             return end;
