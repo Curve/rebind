@@ -13,21 +13,21 @@ namespace rebind
     {
         struct universal
         {
-            template <typename T>
-            constexpr operator T() const;
+            template <typename Self, typename T>
+            constexpr operator T(this Self &&);
         };
 
         template <typename T, typename... Us>
             requires std::is_aggregate_v<T>
         consteval auto arity(Us &&...args)
         {
-            if constexpr (!requires { T{args...}; })
+            if constexpr (!requires { T{std::forward<Us>(args)...}; })
             {
                 return sizeof...(args) - 1;
             }
             else
             {
-                return arity<T>(args..., universal{});
+                return arity<T>(std::forward<Us>(args)..., universal{});
             }
         }
     } // namespace impl
@@ -39,7 +39,7 @@ namespace rebind
         requires std::is_aggregate_v<T>
     constexpr auto to_tuple(T &value) // NOLINT(*-function-size)
     {
-        constexpr auto N = arity<T>;
+        static constexpr auto N = arity<T>;
 
 // NOLINTNEXTLINE
 #define REBIND_GET_N(_, _N, __)                                                                                        \
