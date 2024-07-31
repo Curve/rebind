@@ -51,14 +51,14 @@ namespace rebind
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 #endif
-        static constexpr auto unmangle_member_impl = []()
+        constexpr auto unmangle_member_impl()
         {
             constexpr auto &ref                = get<0>(external<some_ref>);
             constexpr std::string_view mangled = rebind::impl::mangled_name<pointer{&ref}>();
 
-            static constexpr std::string_view field    = "find_me";
-            static constexpr std::string_view instance = "external";
-            static constexpr std::string_view type     = "some_ref";
+            constexpr std::string_view field    = "find_me";
+            constexpr std::string_view instance = "external";
+            constexpr std::string_view type     = "some_ref";
 
             constexpr auto field_occurrence    = mangled.find(field);
             constexpr auto type_occurrence     = mangled.rfind(type, field_occurrence);
@@ -82,8 +82,8 @@ namespace rebind
             requires std::is_aggregate_v<T>
         consteval auto inspect()
         {
-            static constexpr auto &field = get<I>(external<T>);
-            using field_t                = std::decay_t<decltype(field)>;
+            constexpr auto &field = get<I>(external<T>);
+            using field_t         = std::decay_t<decltype(field)>;
 
             return member<field_t, I>{member_name<pointer{&field}>()};
         }
@@ -103,7 +103,7 @@ namespace rebind
         template <typename T>
         consteval auto member_names()
         {
-            static constexpr auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
+            constexpr auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
             {
                 return make_array(inspect<T, I>().name...);
             };

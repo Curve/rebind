@@ -32,11 +32,11 @@ namespace rebind
             requires std::is_enum_v<decltype(T)>
         consteval auto enum_name()
         {
-            static constexpr auto name = rebind::nttp_name<T>;
-            static constexpr auto type = rebind::type_name<decltype(T)>;
+            constexpr auto name = rebind::nttp_name<T>;
+            constexpr auto type = rebind::type_name<decltype(T)>;
 
-            static constexpr auto start = name.substr(name.rfind(type) + type.size());
-            static constexpr auto end   = start.rfind(enum_start);
+            constexpr auto start = name.substr(name.rfind(type) + type.size());
+            constexpr auto end   = start.rfind(enum_start);
 
             if constexpr (end == std::string_view::npos)
             {
@@ -76,16 +76,19 @@ namespace rebind
             }
         }
 
+        template <auto T>
+        using constant = std::integral_constant<decltype(T), T>;
+
         template <typename T>
             requires std::is_enum_v<T>
         consteval auto to_tuple()
         {
-            static constexpr auto min = enum_min<T>();
-            static constexpr auto max = enum_max<T>();
+            constexpr auto min = enum_min<T>();
+            constexpr auto max = enum_max<T>();
 
-            static constexpr auto make_tuple = []<auto V>(std::integral_constant<T, V>) -> std::tuple<enum_field<T>>
+            constexpr auto make_tuple = []<auto V>(constant<V>) -> std::tuple<enum_field<T>>
             {
-                static constexpr auto name = enum_name<V>();
+                constexpr auto name = enum_name<V>();
 
                 if constexpr (name.empty())
                 {
@@ -97,9 +100,9 @@ namespace rebind
                 }
             };
 
-            static constexpr auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
+            constexpr auto unpack = [make_tuple]<std::size_t... Is>(std::index_sequence<Is...>)
             {
-                return std::tuple_cat(make_tuple(std::integral_constant<T, static_cast<T>(min + I)>{})...);
+                return std::tuple_cat(make_tuple(constant<static_cast<T>(min + Is)>{})...);
             };
 
             return unpack(std::make_index_sequence<max - min + 1>());
@@ -109,9 +112,9 @@ namespace rebind
             requires std::is_enum_v<T>
         constexpr auto enum_values()
         {
-            static constexpr auto convert = []<typename... V>(V &&...values)
+            constexpr auto convert = []<typename... Ts>(Ts &&...values)
             {
-                return std::array{std::forward<V>(values)...};
+                return std::array{std::forward<Ts>(values)...};
             };
 
             return std::apply(convert, to_tuple<T>());
