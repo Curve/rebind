@@ -32,11 +32,11 @@ namespace rebind
             requires std::is_enum_v<decltype(T)>
         consteval auto enum_name()
         {
-            constexpr auto name = rebind::nttp_name<T>;
-            constexpr auto type = rebind::type_name<decltype(T)>;
+            static constexpr auto name = rebind::nttp_name<T>;
+            static constexpr auto type = rebind::type_name<decltype(T)>;
 
-            constexpr auto start = name.substr(name.rfind(type) + type.size());
-            constexpr auto end   = start.rfind(enum_start);
+            static constexpr auto start = name.substr(name.rfind(type) + type.size());
+            static constexpr auto end   = start.rfind(enum_start);
 
             if constexpr (end == std::string_view::npos)
             {
@@ -80,12 +80,12 @@ namespace rebind
             requires std::is_enum_v<T>
         consteval auto to_tuple()
         {
-            constexpr auto min = enum_min<T>();
-            constexpr auto max = enum_max<T>();
+            static constexpr auto min = enum_min<T>();
+            static constexpr auto max = enum_max<T>();
 
-            auto make_tuple = []<auto V>(std::integral_constant<T, V>) -> std::tuple<enum_field<T>>
+            static constexpr auto make_tuple = []<auto V>(std::integral_constant<T, V>) -> std::tuple<enum_field<T>>
             {
-                constexpr auto name = enum_name<V>();
+                static constexpr auto name = enum_name<V>();
 
                 if constexpr (name.empty())
                 {
@@ -97,7 +97,7 @@ namespace rebind
                 }
             };
 
-            auto unpack = [&]<std::size_t... I>(std::index_sequence<I...>)
+            static constexpr auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
             {
                 return std::tuple_cat(make_tuple(std::integral_constant<T, static_cast<T>(min + I)>{})...);
             };
@@ -109,7 +109,7 @@ namespace rebind
             requires std::is_enum_v<T>
         constexpr auto enum_values()
         {
-            constexpr auto convert = []<typename... V>(V &&...values)
+            static constexpr auto convert = []<typename... V>(V &&...values)
             {
                 return std::array{std::forward<V>(values)...};
             };
@@ -128,8 +128,8 @@ namespace rebind
         requires std::is_enum_v<T>
     constexpr std::optional<enum_field<T>> enum_value(T value)
     {
-        constexpr auto fields = enum_values<T>;
-        const auto rtn        = std::ranges::find_if(fields, [&](auto &&x) { return x.value == value; });
+        static constexpr auto fields = enum_values<T>;
+        const auto rtn               = std::ranges::find_if(fields, [&](auto &&x) { return x.value == value; });
 
         if (rtn == fields.end())
         {

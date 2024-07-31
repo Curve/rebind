@@ -39,7 +39,7 @@ namespace rebind
         requires std::is_aggregate_v<T>
     constexpr auto to_tuple(T &value) // NOLINT(*-function-size)
     {
-        constexpr auto N = arity<T>;
+        static constexpr auto N = arity<T>;
 
 // NOLINTNEXTLINE
 #define REBIND_GET_N(_, _N, __)                                                                                        \
