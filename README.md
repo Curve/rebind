@@ -4,14 +4,11 @@
 
 ## 📃 Description
 
-_Rebind_ is a simple, tiny C++20 reflection library for aggregates and enums.  
+_Rebind_ is a simple, tiny C++23 reflection library for aggregates and enums.  
 This library is fully compiler agnostic as it figures out how to demangle given types at compile time.
 
-> [!WARNING]  
-> This library requires a fairly recent compiler. It has been tested on:  
-> * MSVC <kbd>>=19.40</kbd>
-> * GCC <kbd>>=13</kbd>
-> * clang <kbd>>=17</kbd>
+> [!NOTE]  
+> Check version `< 2.0.0` for C++20 support.
 
 ## 📦 Installation
 
@@ -19,7 +16,7 @@ This library is fully compiler agnostic as it figures out how to demangle given 
   ```cmake
   CPMFindPackage(
     NAME           rebind
-    VERSION        1.0.0
+    VERSION        2.0.0
     GIT_REPOSITORY "https://github.com/Curve/rebind"
   )
   ```
@@ -28,7 +25,7 @@ This library is fully compiler agnostic as it figures out how to demangle given 
   ```cmake
   include(FetchContent)
 
-  FetchContent_Declare(rebind GIT_REPOSITORY "https://github.com/Curve/rebind" GIT_TAG v1.0.0)
+  FetchContent_Declare(rebind GIT_REPOSITORY "https://github.com/Curve/rebind" GIT_TAG v2.0.0)
   FetchContent_MakeAvailable(rebind)
 
   target_link_libraries(<target> cr::rebind)
