@@ -131,8 +131,8 @@ namespace rebind
         requires std::is_enum_v<T>
     constexpr std::optional<enum_field<T>> enum_value(T value)
     {
-        static constexpr auto fields = enum_values<T>;
-        const auto rtn               = std::ranges::find_if(fields, [&](auto &&x) { return x.value == value; });
+        constexpr auto fields = enum_values<T>;
+        const auto rtn        = std::ranges::find_if(fields, [&](auto &&x) { return x.value == value; });
 
         if (rtn == fields.end())
         {
