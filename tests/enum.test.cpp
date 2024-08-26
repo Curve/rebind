@@ -13,7 +13,7 @@ enum class some_enum
 
 namespace ns
 {
-    enum class another_enum
+    enum class another_enum : std::uint8_t
     {
         x,
         y,

@@ -10,7 +10,7 @@ namespace rebind
 {
     template <typename T>
         requires std::is_enum_v<T>
-    static constexpr std::underlying_type_t<T> enum_find_min = -128;
+    static constexpr std::underlying_type_t<T> enum_find_min = 0;
 
     template <typename T>
         requires std::is_enum_v<T>
