@@ -63,7 +63,7 @@ namespace rebind
 
     template <std::size_t I, typename T>
         requires std::is_aggregate_v<T>
-    constexpr decltype(auto) get(T &value)
+    constexpr auto &get(T &value)
     {
         return std::get<I>(to_tuple(value));
     }

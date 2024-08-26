@@ -72,7 +72,7 @@ constexpr auto to_tuple(T &value);
 ```cpp
 template <std::size_t I, typename T>
     requires std::is_aggregate_v<T>
-constexpr decltype(auto) get(T &value);
+constexpr auto& get(T &value);
 ```
 
 > **Returns**: A reference to the nth member of `value`
