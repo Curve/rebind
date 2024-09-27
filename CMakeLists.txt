@@ -31,7 +31,7 @@ include("cmake/cpm.cmake")
 
 CPMFindPackage(
   NAME           boost_preprocessor
-  GIT_TAG        boost-1.85.0
+  GIT_TAG        boost-1.86.0
   GIT_REPOSITORY "https://github.com/boostorg/preprocessor"
 )
 
