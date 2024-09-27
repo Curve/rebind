@@ -13,7 +13,7 @@ This library is fully compiler agnostic as it figures out how to demangle given 
   ```cmake
   CPMFindPackage(
     NAME           rebind
-    VERSION        2.0.0
+    VERSION        3.0.0
     GIT_REPOSITORY "https://github.com/Curve/rebind"
   )
   ```
@@ -22,7 +22,7 @@ This library is fully compiler agnostic as it figures out how to demangle given 
   ```cmake
   include(FetchContent)
 
-  FetchContent_Declare(rebind GIT_REPOSITORY "https://github.com/Curve/rebind" GIT_TAG v2.0.0)
+  FetchContent_Declare(rebind GIT_REPOSITORY "https://github.com/Curve/rebind" GIT_TAG v3.0.0)
   FetchContent_MakeAvailable(rebind)
 
   target_link_libraries(<target> cr::rebind)
@@ -115,17 +115,24 @@ static constexpr auto enum_name = /*...*/;
 
 ```cpp
 template <typename T>
-static constexpr auto enum_values = /*...*/;
+static constexpr auto enum_fields = /*...*/;
 ```
 
-> **Returns**: All possible values of the given enum `T`  
+> **Returns**: All possible entires of the given enum `T`  
 > **Contains**: The enum `value` and `name`
 
 ```cpp
 template <typename T>
     requires std::is_enum_v<T>
-constexpr std::optional<impl::enum_field<T>> enum_value(T value);
+constexpr std::optional<std::string_view> find_enum_name(T value);
 ```
 
-> **Returns**: Metadata on the corresponding enum `value`  
-> **Contains**: The enum `value` and `name`
+> **Returns**: The enum name corresponding to the given value
+
+```cpp
+template <typename T>
+    requires std::is_enum_v<T>
+constexpr std::optional<T> find_enum_value(std::string_view name)
+```
+
+> **Returns**: The enum value corresponding to the given name
