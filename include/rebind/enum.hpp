@@ -2,7 +2,10 @@
 
 #include "name.hpp"
 
-#include <tuple>
+#include <cmath>
+#include <limits>
+
+#include <array>
 #include <optional>
 #include <algorithm>
 
@@ -14,19 +17,20 @@ namespace rebind
 
     template <typename T>
         requires std::is_enum_v<T>
-    static constexpr std::underlying_type_t<T> enum_find_max = 128;
-
-    template <typename T>
-        requires std::is_enum_v<T>
-    struct enum_field
-    {
-        T value;
-        std::string_view name;
-    };
+    static constexpr std::underlying_type_t<T> enum_find_max =
+        std::min(std::numeric_limits<std::underlying_type_t<T>>::max(), static_cast<std::underlying_type_t<T>>(128));
 
     namespace impl
     {
         static constexpr std::string_view enum_start = "::";
+
+        template <typename T>
+            requires std::is_enum_v<T>
+        struct enum_field
+        {
+            T value;
+            std::string_view name;
+        };
 
         template <auto T>
             requires std::is_enum_v<decltype(T)>
@@ -48,76 +52,63 @@ namespace rebind
             }
         }
 
-        template <typename T, auto I = enum_find_min<T>>
-            requires std::is_enum_v<T>
-        consteval auto enum_min()
-        {
-            if constexpr (I < enum_find_max<T> && enum_name<static_cast<T>(I)>().empty())
-            {
-                return enum_min<T, I + 1>();
-            }
-            else
-            {
-                return I;
-            }
-        }
-
-        template <typename T, auto I = enum_find_max<T>>
-            requires std::is_enum_v<T>
-        consteval auto enum_max()
-        {
-            if constexpr (I > enum_find_min<T> && enum_name<static_cast<T>(I)>().empty())
-            {
-                return enum_max<T, I - 1>();
-            }
-            else
-            {
-                return I;
-            }
-        }
-
         template <auto T>
-        using constant = std::integral_constant<decltype(T), T>;
-
-        template <typename T>
-            requires std::is_enum_v<T>
-        consteval auto to_tuple()
+            requires std::is_enum_v<decltype(T)>
+        consteval auto is_valid()
         {
-            constexpr auto min = enum_min<T>();
-            constexpr auto max = enum_max<T>();
+            return !enum_name<T>().empty();
+        }
 
-            constexpr auto make_tuple = []<auto V>(constant<V>) -> std::tuple<enum_field<T>>
+        template <typename T, auto I = enum_find_min<T>, auto R = 0>
+            requires std::is_enum_v<T>
+        consteval std::size_t valid_indices()
+        {
+            if constexpr (I < enum_find_max<T>)
             {
-                constexpr auto name = enum_name<V>();
-
-                if constexpr (name.empty())
+                if constexpr (is_valid<static_cast<T>(I)>())
                 {
-                    return {};
+                    return valid_indices<T, I + 1, R + 1>();
                 }
                 else
                 {
-                    return {{V, name}};
+                    return valid_indices<T, I + 1, R>();
                 }
-            };
+            }
 
-            constexpr auto unpack = [make_tuple]<std::size_t... Is>(std::index_sequence<Is...>)
+            return R;
+        }
+
+        template <typename T, auto I = enum_find_min<T>, auto C = 0>
+            requires std::is_enum_v<T>
+        consteval void populate(auto &rtn)
+        {
+            constexpr auto value = static_cast<T>(I);
+
+            if constexpr (I < enum_find_max<T>)
             {
-                return std::tuple_cat(make_tuple(constant<static_cast<T>(min + Is)>{})...);
-            };
+                if constexpr (is_valid<value>())
+                {
+                    rtn[I] = enum_field<T>{
+                        .value = value,
+                        .name  = enum_name<value>(),
+                    };
 
-            return unpack(std::make_index_sequence<max - min + 1>());
+                    return populate<T, I + 1, C + 1>(rtn);
+                }
+                else
+                {
+                    return populate<T, I + 1, C>(rtn);
+                }
+            }
         }
 
         template <typename T>
             requires std::is_enum_v<T>
-        constexpr auto enum_values()
+        consteval auto enum_fields()
         {
-            constexpr auto convert = []<typename... Ts>(Ts &&...values)
-            {
-                return std::array{std::forward<Ts>(values)...};
-            };
-
-            return std::apply(convert, to_tuple<T>());
+            std::array<enum_field<T>, valid_indices<T>()> rtn;
+            populate<T>(rtn);
+            return rtn;
         }
     } // namespace impl
 
@@ -125,13 +116,13 @@ namespace rebind
     static constexpr auto enum_name = impl::enum_name<T>();
 
     template <typename T>
-    static constexpr auto enum_values = impl::enum_values<T>();
+    static constexpr auto enum_fields = impl::enum_fields<T>();
 
     template <typename T>
         requires std::is_enum_v<T>
-    constexpr std::optional<enum_field<T>> enum_value(T value)
+    constexpr std::optional<std::string_view> find_enum_name(T value)
     {
-        constexpr auto fields = enum_values<T>;
+        constexpr auto fields = enum_fields<T>;
         const auto rtn        = std::ranges::find_if(fields, [&](auto &&x) { return x.value == value; });
 
         if (rtn == fields.end())
@@ -139,6 +130,21 @@ namespace rebind
             return std::nullopt;
         }
 
-        return *rtn;
+        return rtn->name;
+    }
+
+    template <typename T>
+        requires std::is_enum_v<T>
+    constexpr std::optional<T> find_enum_value(std::string_view name)
+    {
+        constexpr auto fields = enum_fields<T>;
+        const auto rtn        = std::ranges::find_if(fields, [&](auto &&x) { return x.name == name; });
+
+        if (rtn == fields.end())
+        {
+            return std::nullopt;
+        }
+
+        return rtn->value;
     }
 } // namespace rebind
