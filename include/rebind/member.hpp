@@ -108,6 +108,17 @@ namespace rebind
         }
 
         template <typename T>
+        consteval auto members()
+        {
+            constexpr auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
+            {
+                return std::make_tuple(inspect<T, I>()...);
+            };
+
+            return unpack(std::make_index_sequence<rebind::arity<T>>());
+        }
+
+        template <typename T>
         consteval auto member_names()
         {
             constexpr auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
@@ -122,22 +133,12 @@ namespace rebind
     template <typename T, std::size_t I>
     static constexpr auto inspect = impl::inspect<T, I>();
 
+    template <typename T>
+    static constexpr auto members = impl::members<T>();
+
     template <auto T>
-        requires std::is_member_pointer_v<decltype(T)>
     static constexpr auto member_name = impl::member_name<T>(T);
 
     template <typename T>
     static constexpr auto member_names = impl::member_names<T>();
-
-    template <typename T, typename Fn>
-        requires std::is_aggregate_v<T>
-    constexpr auto visit(T &value, Fn &&callback)
-    {
-        auto unpack = [&]<std::size_t... I>(std::index_sequence<I...>)
-        {
-            (callback(get<I>(value), inspect<T, I>), ...);
-        };
-
-        return unpack(std::make_index_sequence<arity<T>>());
-    }
 } // namespace rebind
