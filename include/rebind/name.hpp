@@ -9,10 +9,6 @@ namespace rebind
 {
     namespace impl
     {
-        enum enum_ref
-        {
-        };
-
         template <auto T>
         consteval auto mangled_name()
         {
@@ -41,20 +37,6 @@ namespace rebind
 
             constexpr auto prefix = mangled.substr(0, start);
             constexpr auto suffix = mangled.substr(start + to_find.size());
-
-            return std::make_pair(prefix, suffix);
-        };
-
-        constexpr auto unmangle_enum_impl()
-        {
-            constexpr std::string_view mangled = mangled_name<std::type_identity<enum_ref>{}>();
-            constexpr std::string_view to_find = "enum_ref";
-
-            constexpr auto occurrence = mangled.find(to_find);
-            constexpr auto start      = mangled.substr(0, occurrence).find_last_of(" <") + 1;
-
-            constexpr auto prefix = mangled.substr(0, start);
-            constexpr auto suffix = mangled.substr(occurrence + to_find.size());
 
             return std::make_pair(prefix, suffix);
         };
@@ -88,7 +70,7 @@ namespace rebind
         consteval auto type_name()
         {
             constexpr auto name       = unmangle<std::type_identity<T>{}, unmangle_type_impl>();
-            constexpr auto has_prefix = name.starts_with("struct ") || name.starts_with("class "); // Fuck MSVC
+            constexpr auto has_prefix = name.starts_with("struct ") || name.starts_with("class "); // MSVC Prefix
 
             if constexpr (has_prefix)
             {
@@ -104,7 +86,17 @@ namespace rebind
             requires std::is_enum_v<T>
         consteval auto type_name()
         {
-            return unmangle<std::type_identity<T>{}, unmangle_enum_impl>();
+            constexpr auto name       = unmangle<std::type_identity<T>{}, unmangle_type_impl>();
+            constexpr auto has_prefix = name.starts_with("enum "); // MSVC Prefix
+
+            if constexpr (has_prefix)
+            {
+                return name.substr(name.find(' ') + 1);
+            }
+            else
+            {
+                return name;
+            }
         }
 
         template <auto T, typename C>
