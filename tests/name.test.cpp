@@ -3,6 +3,25 @@
 
 using namespace boost::ut;
 
+namespace ns
+{
+    struct some_struct
+    {
+    };
+
+    struct some_class
+    {
+    };
+} // namespace ns
+
+struct some_struct
+{
+};
+
+struct some_class
+{
+};
+
 // NOLINTNEXTLINE
 suite<"name"> name_test = []()
 {
@@ -12,4 +31,10 @@ suite<"name"> name_test = []()
 
     expect(rebind::nttp_name<true> == "true");
     expect(rebind::nttp_name<false> == "false");
+
+    expect(rebind::type_name<some_struct> == "some_struct");
+    expect(rebind::type_name<ns::some_struct> == "ns::some_struct");
+
+    expect(rebind::type_name<some_class> == "some_class");
+    expect(rebind::type_name<ns::some_class> == "ns::some_class");
 };

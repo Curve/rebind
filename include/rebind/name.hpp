@@ -84,6 +84,23 @@ namespace rebind
         }
 
         template <typename T>
+            requires std::is_class_v<T>
+        consteval auto type_name()
+        {
+            constexpr auto name       = unmangle<std::type_identity<T>{}, unmangle_type_impl>();
+            constexpr auto has_prefix = name.starts_with("struct ") || name.starts_with("class "); // Fuck MSVC
+
+            if constexpr (has_prefix)
+            {
+                return name.substr(name.find(' ') + 1);
+            }
+            else
+            {
+                return name;
+            }
+        }
+
+        template <typename T>
             requires std::is_enum_v<T>
         consteval auto type_name()
         {
