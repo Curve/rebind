@@ -22,8 +22,6 @@ namespace rebind
 
     namespace impl
     {
-        static constexpr std::string_view enum_start = "::";
-
         template <typename T>
             requires std::is_enum_v<T>
         struct enum_field
@@ -36,20 +34,7 @@ namespace rebind
             requires std::is_enum_v<decltype(T)>
         consteval auto enum_name()
         {
-            constexpr auto name = rebind::nttp_name<T>;
-            constexpr auto type = rebind::type_name<decltype(T)>;
-
-            constexpr auto start = name.substr(name.rfind(type) + type.size());
-            constexpr auto end   = start.rfind(enum_start);
-
-            if constexpr (end == std::string_view::npos)
-            {
-                return std::string_view{};
-            }
-            else
-            {
-                return start.substr(end + enum_start.size());
-            }
+            return extract_member<T, decltype(T)>();
         }
 
         template <auto T>

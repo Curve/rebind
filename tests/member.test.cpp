@@ -20,6 +20,11 @@ suite<"member"> member_test = []()
 {
     expect(rebind::arity<simple> == 4);
 
+    expect(rebind::member_name<&simple::x> == "x");
+    expect(rebind::member_name<&simple::y> == "y");
+    expect(rebind::member_name<&simple::z> == "z");
+    expect(rebind::member_name<&simple::inner> == "inner");
+
     constexpr auto names = rebind::member_names<simple>;
     expect(names.size() == 4);
 

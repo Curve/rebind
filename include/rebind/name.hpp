@@ -47,7 +47,7 @@ namespace rebind
 
         constexpr auto unmangle_enum_impl()
         {
-            constexpr std::string_view mangled = mangled_name<std::type_identity<rebind::impl::enum_ref>{}>();
+            constexpr std::string_view mangled = mangled_name<std::type_identity<enum_ref>{}>();
             constexpr std::string_view to_find = "enum_ref";
 
             constexpr auto occurrence = mangled.find(to_find);
@@ -88,6 +88,27 @@ namespace rebind
         consteval auto type_name()
         {
             return unmangle<std::type_identity<T>{}, unmangle_enum_impl>();
+        }
+
+        template <auto T, typename C>
+        consteval auto extract_member()
+        {
+            constexpr std::string_view delim = "::";
+
+            constexpr auto name = nttp_name<T>();
+            constexpr auto type = type_name<C>();
+
+            constexpr auto start = name.substr(name.rfind(type) + type.size());
+            constexpr auto end   = start.rfind(delim);
+
+            if (end == std::string_view::npos)
+            {
+                return std::string_view{};
+            }
+            else
+            {
+                return start.substr(end + delim.size());
+            }
         }
     } // namespace impl
 

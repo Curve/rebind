@@ -88,6 +88,14 @@ static constexpr auto inspect = /*...*/;
 > **Contains**: The members `name`, `type`
 
 ```cpp
+template <auto T>
+    requires std::is_member_pointer_v<decltype(T)>
+static constexpr auto member_name = /*...*/;
+```
+
+> **Returns**: The name of the given member pointer `T`  
+
+```cpp
 template <typename T>
 static constexpr auto member_names = /*...*/;
 ```

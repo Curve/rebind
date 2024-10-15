@@ -54,7 +54,7 @@ namespace rebind
         constexpr auto unmangle_member_impl()
         {
             constexpr auto &ref                = get<0>(external<some_ref>);
-            constexpr std::string_view mangled = rebind::impl::mangled_name<pointer{&ref}>();
+            constexpr std::string_view mangled = mangled_name<pointer{&ref}>();
 
             constexpr std::string_view field    = "find_me";
             constexpr std::string_view instance = "external";
@@ -91,6 +91,13 @@ namespace rebind
 #pragma clang diagnostic pop
 #endif
 
+        template <auto T, typename C, typename V, std::size_t I = 0>
+            requires std::is_member_pointer_v<decltype(T)>
+        consteval auto member_name(V C::*)
+        {
+            return extract_member<T, C>();
+        }
+
         template <typename... Ts>
         consteval auto make_array(Ts &&...values)
         {
@@ -114,6 +121,10 @@ namespace rebind
 
     template <typename T, std::size_t I>
     static constexpr auto inspect = impl::inspect<T, I>();
+
+    template <auto T>
+        requires std::is_member_pointer_v<decltype(T)>
+    static constexpr auto member_name = impl::member_name<T>(T);
 
     template <typename T>
     static constexpr auto member_names = impl::member_names<T>();
