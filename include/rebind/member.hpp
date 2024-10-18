@@ -5,14 +5,14 @@
 
 namespace rebind
 {
-    template <typename T, std::size_t I>
+    template <typename T>
     struct member
     {
-        std::string_view name;
+        using type = T;
 
       public:
-        using type                  = T;
-        static constexpr auto index = I;
+        std::size_t index;
+        std::string_view name;
     };
 
     namespace impl
@@ -20,124 +20,120 @@ namespace rebind
         template <typename T>
         extern T external;
 
-        template <typename T>
-        struct pointer
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
+#endif
+        template <typename T, std::size_t I>
+        static consteval decltype(auto) member_at()
         {
-            const T *value;
+            return std::get<I>(to_tuple(external<T>));
         };
+
+        template <typename T>
+        static constexpr auto member_count = []
+        {
+            return std::tuple_size_v<decltype(to_tuple(external<T>))>;
+        }();
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
         struct some_ref
         {
             int find_me;
         };
 
-        template <typename T>
-        consteval auto max(const T &first, const T &second)
+        static constexpr auto external_decorators = []
         {
-            if (first == std::string_view::npos)
-            {
-                return second;
-            }
+            constexpr auto member  = &member_at<some_ref, 0>();
+            constexpr auto mangled = mangled_name<member>();
 
-            if (second == std::string_view::npos)
-            {
-                return first;
-            }
-
-            return first > second ? first : second;
-        }
-
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#endif
-        constexpr auto unmangle_member_impl()
-        {
-            constexpr auto &ref                = get<0>(external<some_ref>);
-            constexpr std::string_view mangled = mangled_name<pointer{&ref}>();
-
-            constexpr std::string_view field    = "find_me";
             constexpr std::string_view instance = "external";
-            constexpr std::string_view type     = "some_ref";
+            constexpr std::string_view name     = "find_me";
 
-            constexpr auto field_occurrence    = mangled.find(field);
-            constexpr auto type_occurrence     = mangled.rfind(type, field_occurrence);
-            constexpr auto instance_occurrence = mangled.rfind(instance, field_occurrence);
+            constexpr auto start = mangled.find(instance);
+            constexpr auto end   = mangled.rfind(name);
 
-            constexpr auto start = max(instance_occurrence, type_occurrence + type.size());
-
-            constexpr auto prefix = mangled.substr(start, field_occurrence - start);
-            constexpr auto suffix = mangled.substr(field_occurrence + field.size());
+            constexpr auto prefix = mangled.substr(0, start + instance.size());
+            constexpr auto suffix = mangled.substr(end + name.size());
 
             return std::make_pair(prefix, suffix);
-        };
+        }();
 
-        template <pointer T>
-        consteval auto member_name()
+        template <auto T>
+        static constexpr auto unmangle_external = []
         {
-            return unmangle<T, unmangle_member_impl>();
-        }
+            constexpr auto mangled    = mangled_name<T>();
+            constexpr auto decorators = external_decorators;
 
-        template <typename T, std::size_t I>
+            return unmangle(mangled, decorators);
+        }();
+
+        static constexpr auto member_decorators = []
+        {
+            constexpr auto member  = &member_at<some_ref, 0>();
+            constexpr auto mangled = unmangle_external<member>;
+
+            constexpr std::string_view type = "some_ref";
+            constexpr std::string_view name = "find_me";
+
+            constexpr auto type_pos = mangled.rfind(type);
+            constexpr auto name_pos = mangled.rfind(name);
+
+            constexpr auto start = type_pos == std::string_view::npos ? 0 : type_pos + type.size();
+
+            constexpr auto prefix = mangled.substr(start, name_pos - start);
+            constexpr auto suffix = mangled.substr(name_pos + name.size());
+
+            return std::make_pair(prefix, suffix);
+        }();
+
+        template <auto T>
+        static constexpr auto unmangle_member = []
+        {
+            constexpr auto mangled    = unmangle_external<T>;
+            constexpr auto decorators = member_decorators;
+
+            return unmangle(mangled, decorators);
+        }();
+
+        template <typename T>
             requires std::is_aggregate_v<T>
-        consteval auto inspect()
+        static constexpr auto members = []
         {
-            constexpr auto &field = get<I>(external<T>);
-            using field_t         = std::decay_t<decltype(field)>;
+            constexpr auto unpack = []<auto... Is>(std::index_sequence<Is...>)
+            {
+                auto unpack_at = []<auto I>(constant<I>)
+                {
+                    constexpr auto &member = member_at<T, I>();
 
-            return member<field_t, I>{member_name<pointer{&field}>()};
-        }
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+                    return rebind::member<std::remove_reference_t<decltype(member)>>{
+                        .index = I,
+                        .name  = unmangle_member<&member>,
+                    };
+                };
 
-        template <auto T, typename C, typename V, std::size_t I = 0>
+                return std::make_tuple(unpack_at(constant<Is>{})...);
+            };
+
+            return unpack(std::make_index_sequence<member_count<T>>{});
+        }();
+
+        template <auto T, typename C, typename V>
             requires std::is_member_pointer_v<decltype(T)>
         consteval auto member_name(V C::*)
         {
-            return extract_member<T, C>();
-        }
+            constexpr auto name = rebind::nttp_name<T>;
+            constexpr auto type = rebind::type_name<C>;
 
-        template <typename... Ts>
-        consteval auto make_array(Ts &&...values)
-        {
-            // We need this helper because msvc is retarded. The following issue seems related but is not quite the
-            // same: https://developercommunity.visualstudio.com/t/Error-calling-consteval-function-from-an/1669482
-
-            return std::array{std::forward<Ts>(values)...};
-        }
-
-        template <typename T>
-        consteval auto member_names()
-        {
-            constexpr auto unpack = []<std::size_t... I>(std::index_sequence<I...>)
-            {
-                return make_array(inspect<T, I>().name...);
-            };
-
-            return unpack(std::make_index_sequence<rebind::arity<T>>());
+            return remove_type(name, type, "::");
         }
     } // namespace impl
 
-    template <typename T, std::size_t I>
-    static constexpr auto inspect = impl::inspect<T, I>();
+    template <typename T>
+    static constexpr auto members = impl::members<T>;
 
     template <auto T>
-        requires std::is_member_pointer_v<decltype(T)>
     static constexpr auto member_name = impl::member_name<T>(T);
-
-    template <typename T>
-    static constexpr auto member_names = impl::member_names<T>();
-
-    template <typename T, typename Fn>
-        requires std::is_aggregate_v<T>
-    constexpr auto visit(T &value, Fn &&callback)
-    {
-        auto unpack = [&]<std::size_t... I>(std::index_sequence<I...>)
-        {
-            (callback(get<I>(value), inspect<T, I>), ...);
-        };
-
-        return unpack(std::make_index_sequence<arity<T>>());
-    }
 } // namespace rebind

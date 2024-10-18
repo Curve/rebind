@@ -25,21 +25,23 @@ suite<"member"> member_test = []()
     expect(rebind::member_name<&simple::z> == "z");
     expect(rebind::member_name<&simple::inner> == "inner");
 
-    constexpr auto names = rebind::member_names<simple>;
-    expect(names.size() == 4);
+    constexpr auto members = rebind::members<simple>;
+    expect(std::tuple_size_v<decltype(members)> == 4);
 
-    expect(names.at(0) == "x");
-    expect(names.at(1) == "y");
-    expect(names.at(2) == "z");
-    expect(names.at(3) == "inner");
+    expect(std::get<0>(members).name == "x");
+    expect(std::get<1>(members).name == "y");
+    expect(std::get<2>(members).name == "z");
+    expect(std::get<3>(members).name == "inner");
 
-    constexpr auto field = rebind::inspect<simple, 1>;
-    using field_t        = decltype(field);
+    expect(std::get<0>(members).index == 0);
+    expect(std::get<1>(members).index == 1);
+    expect(std::get<2>(members).index == 2);
+    expect(std::get<3>(members).index == 3);
 
-    expect(field.name == "y");
-
-    expect(eq(field_t::index, 1));
-    expect(std::is_same_v<field_t::type, float>);
+    expect(std::same_as<std::tuple_element_t<0, decltype(members)>::type, int>);
+    expect(std::same_as<std::tuple_element_t<1, decltype(members)>::type, float>);
+    expect(std::same_as<std::tuple_element_t<2, decltype(members)>::type, double>);
+    expect(std::is_class_v<std::tuple_element_t<3, decltype(members)>::type>);
 
     simple instance{1, 2, 3, {true}};
 
@@ -51,48 +53,9 @@ suite<"member"> member_test = []()
     expect(std::get<2>(tuple) == 3);
     expect(std::get<3>(tuple).test);
 
-    rebind::get<0>(instance)      = 500;
-    rebind::get<3>(instance).test = false;
-
-    expect(std::get<0>(tuple) == 500);
+    std::get<0>(tuple) = 500;
     expect(instance.x == 500);
 
-    expect(!std::get<3>(tuple).test);
+    std::get<3>(tuple).test = false;
     expect(!instance.inner.test);
-
-    rebind::visit(instance,
-                  []<typename T, typename M>(T &value, const M &meta)
-                  {
-                      using type = M::type;
-
-                      if constexpr (std::is_arithmetic_v<T>)
-                      {
-                          if (meta.name == "x")
-                          {
-                              expect(eq(value, 500));
-                              expect(eq(meta.index, 0));
-                              expect(std::is_same_v<type, int>);
-                          }
-                          else if (meta.name == "y")
-                          {
-                              expect(eq(value, 2));
-                              expect(eq(meta.index, 1));
-                              expect(std::is_same_v<type, float>);
-                          }
-                          else if (meta.name == "z")
-                          {
-                              expect(eq(value, 3));
-                              expect(eq(meta.index, 2));
-                              expect(std::is_same_v<type, double>);
-                          }
-                      }
-                      else
-                      {
-                          expect(meta.name == "inner");
-
-                          expect(eq(meta.index, 3));
-                          expect(eq(value.test, false));
-                          expect(std::is_aggregate_v<type>);
-                      }
-                  });
 };
