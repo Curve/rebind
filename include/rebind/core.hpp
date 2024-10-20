@@ -17,8 +17,8 @@ namespace rebind::impl
     template <typename U>
     consteval auto unmangle(std::string_view name, U decorators)
     {
-        const auto start = name.substr(name.rfind(decorators.first) + decorators.first.size());
-        const auto end   = start.substr(0, start.rfind(decorators.second));
+        const auto start = name.substr(0, name.rfind(decorators.second));
+        const auto end   = start.substr(start.rfind(decorators.first) + decorators.first.size());
 
         return end;
     }

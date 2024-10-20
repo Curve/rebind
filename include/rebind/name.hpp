@@ -12,7 +12,7 @@ namespace rebind
             constexpr auto mangled = mangled_name<T>();
             const auto start       = mangled.find(needle);
 
-            const auto prefix = mangled.substr(0, start);
+            const auto prefix = mangled.substr(start - 1, 1);
             const auto suffix = mangled.substr(start + needle.size());
 
             return std::make_pair(prefix, suffix);

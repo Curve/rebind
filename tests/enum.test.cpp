@@ -32,7 +32,7 @@ suite<"enum"> enum_test = []()
         expect(rebind::enum_name<some_enum::a> == "a");
         expect(rebind::enum_name<some_enum::b> == "b");
 
-        constexpr auto values = rebind::enum_values<some_enum>;
+        static constexpr auto values = rebind::enum_values<some_enum>;
 
         expect(values.size() == 3);
 
@@ -54,7 +54,7 @@ suite<"enum"> enum_test = []()
         expect(rebind::enum_name<ns::another_enum::x> == "x");
         expect(rebind::enum_name<ns::another_enum::y> == "y");
 
-        constexpr auto values = rebind::enum_values<ns::another_enum>;
+        static constexpr auto values = rebind::enum_values<ns::another_enum>;
 
         expect(values.size() == 3);
 

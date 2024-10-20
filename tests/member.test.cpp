@@ -25,23 +25,32 @@ suite<"member"> member_test = []()
     expect(rebind::member_name<&simple::z> == "z");
     expect(rebind::member_name<&simple::inner> == "inner");
 
-    constexpr auto members = rebind::members<simple>;
+    static constexpr auto members       = rebind::members<simple>;
+    static constexpr auto inner_members = rebind::members<decltype(simple{}.inner)>;
+
     expect(std::tuple_size_v<decltype(members)> == 4);
+    expect(std::tuple_size_v<decltype(inner_members)> == 1);
 
     expect(std::get<0>(members).name == "x");
     expect(std::get<1>(members).name == "y");
     expect(std::get<2>(members).name == "z");
+
     expect(std::get<3>(members).name == "inner");
+    expect(std::get<0>(inner_members).name == "test");
 
     expect(std::get<0>(members).index == 0);
     expect(std::get<1>(members).index == 1);
     expect(std::get<2>(members).index == 2);
+
     expect(std::get<3>(members).index == 3);
+    expect(std::get<0>(inner_members).index == 0);
 
     expect(std::same_as<std::tuple_element_t<0, decltype(members)>::type, int>);
     expect(std::same_as<std::tuple_element_t<1, decltype(members)>::type, float>);
     expect(std::same_as<std::tuple_element_t<2, decltype(members)>::type, double>);
+
     expect(std::is_class_v<std::tuple_element_t<3, decltype(members)>::type>);
+    expect(std::same_as<std::tuple_element_t<0, decltype(inner_members)>::type, bool>);
 
     simple instance{1, 2, 3, {true}};
 
