@@ -13,7 +13,7 @@ jobs:
 
       matrix:
         config: [Release, Debug]
-        type: [gcc, clang, msvc]
+        type: [gcc, clang, msvc, clang-cl]
 
         include:
           - type: gcc
@@ -23,6 +23,9 @@ jobs:
           - type: clang
             container: archlinux:base-devel
             deps: pacman --noconfirm -Syu git cmake clang ninja make
+
+          - type: clang-cl
+            cmake_args: -T ClangCL -A x64
 
     runs-on: ${{ (contains(matrix.type, 'msvc') || contains(matrix.type, 'clang-cl')) && 'windows-latest' || 'ubuntu-latest' }}
     container: ${{ matrix.container }}
