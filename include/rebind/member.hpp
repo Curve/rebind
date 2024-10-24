@@ -22,31 +22,19 @@ namespace rebind
 #pragma clang diagnostic ignored "-Weverything"
 #endif
         template <typename T>
-        struct dummy
-        {
-            T value;
-
-          public:
-            static const dummy<T> instance;
-        };
-
-        template <typename T>
-        consteval auto &dummy_value()
-        {
-            return dummy<T>::instance.value;
-        }
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+        extern const T dummy;
 
         template <typename T, std::size_t I>
         consteval decltype(auto) member_at()
         {
-            return std::get<I>(to_tuple(dummy_value<T>()));
+            return std::get<I>(to_tuple(dummy<T>));
         };
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
         template <typename T>
-        struct pointer // MSVC workaround
+        struct pointer // Clang (<= 17) & MSVC workaround
         {
             const T *value;
         };
@@ -61,7 +49,7 @@ namespace rebind
         template <auto T>
         static constexpr auto unmangle_member = []
         {
-            constexpr auto mangled    = mangled_name<pointer{T}>();
+            constexpr auto mangled    = mangled_name<T>();
             constexpr auto decorators = member_decorators;
 
             return unmangle(mangled, decorators);
@@ -76,7 +64,7 @@ namespace rebind
             {
                 constexpr auto &member = member_at<T, I>();
                 using member_t         = std::remove_cvref_t<decltype(member)>;
-                return rebind::member<member_t>{.index = I, .name = unmangle_member<&member>};
+                return rebind::member<member_t>{.index = I, .name = unmangle_member<pointer{&member}>};
             };
 
             const auto unpack_sequence = [unpack]<auto... Is>(std::index_sequence<Is...>)
