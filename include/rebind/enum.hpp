@@ -17,7 +17,7 @@ namespace rebind
     {
         using underlying     = std::underlying_type_t<T>;
         constexpr auto limit = std::numeric_limits<underlying>::min();
-        return static_cast<underlying>(std::max(static_cast<std::int64_t>(limit), static_cast<std::int64_t>(-128)));
+        return static_cast<underlying>(std::max(static_cast<std::intmax_t>(limit), static_cast<std::intmax_t>(-128)));
     }();
 
     template <typename T>
@@ -26,7 +26,7 @@ namespace rebind
     {
         using underlying     = std::underlying_type_t<T>;
         constexpr auto limit = std::numeric_limits<underlying>::max();
-        return static_cast<underlying>(std::min(static_cast<std::uint64_t>(limit), static_cast<std::uint64_t>(128)));
+        return static_cast<underlying>(std::min(static_cast<std::intmax_t>(limit), static_cast<std::intmax_t>(128)));
     }();
 
     namespace impl
@@ -44,7 +44,7 @@ namespace rebind
             return remove_type(name, type, "::");
         }();
 
-        template <typename T, auto I, auto Max, typename State>
+        template <typename T, auto I, auto Max, typename State = std::tuple<>>
         consteval auto search_enum_values()
         {
             if constexpr (I < Max)
@@ -74,10 +74,10 @@ namespace rebind
         {
             constexpr auto unpack = []<auto... Is>(std::tuple<constant<Is>...>)
             {
-                return std::array<T, sizeof...(Is)>{static_cast<T>(Is)...};
+                return std::array<T, sizeof...(Is)>{Is...};
             };
 
-            return unpack(search_enum_values<T, search_min<T>, search_max<T>, std::tuple<>>());
+            return unpack(search_enum_values<T, search_min<T>, search_max<T>>());
         }();
     } // namespace impl
 
