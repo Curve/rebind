@@ -55,7 +55,7 @@ static constexpr auto nttp_name = /*...*/;
 ---
 
 ```cpp
-template <auto T>
+template <typename T>
 static constexpr auto arity = /*...*/;
 ```
 
@@ -63,53 +63,27 @@ static constexpr auto arity = /*...*/;
 
 ```cpp
 template <typename T>
-    requires std::is_aggregate_v<T>
 constexpr auto to_tuple(T &value);
 ```
 
 > **Returns**: A tuple of references to all members of the given `value`
 
-```cpp
-template <std::size_t I, typename T>
-    requires std::is_aggregate_v<T>
-constexpr auto& get(T &value);
-```
-
-> **Returns**: A reference to the nth member of `value`
-
 ---
 
 ```cpp
-template <typename T, std::size_t I>
-static constexpr auto inspect = /*...*/;
+template <typename T>
+static constexpr auto members = /*...*/;
 ```
 
-> **Returns**: Metadata on the nth member of `T`  
-> **Contains**: The members `name`, `type`
+> **Returns**: A `rebind::member` object for each member present in the aggregate
+> **Contains**: The `type`, `name` and `index`
 
 ```cpp
 template <auto T>
-    requires std::is_member_pointer_v<decltype(T)>
 static constexpr auto member_name = /*...*/;
 ```
 
-> **Returns**: The name of the given member pointer `T`  
-
-```cpp
-template <typename T>
-static constexpr auto member_names = /*...*/;
-```
-
-> **Returns**: An array containing the names of all members of `T`  
-
-```cpp
-template <typename T, typename Fn>
-    requires std::is_aggregate_v<T>
-constexpr auto visit(T &value, Fn &&callback);
-```
-
-> **Brief**: Calls `callback` with all members of `value`  
-> **Note**: The passed `callback` receives two arguments, the first being a reference to the member and the second being the metadata on the member _(as returned by `rebind::inspect`)_
+> **Returns**: The member name of the given member pointer
 
 ---
 
@@ -123,24 +97,7 @@ static constexpr auto enum_name = /*...*/;
 
 ```cpp
 template <typename T>
-static constexpr auto enum_fields = /*...*/;
+static constexpr auto enum_values = /*...*/;
 ```
 
-> **Returns**: All possible entires of the given enum `T`  
-> **Contains**: The enum `value` and `name`
-
-```cpp
-template <typename T>
-    requires std::is_enum_v<T>
-constexpr std::optional<std::string_view> find_enum_name(T value);
-```
-
-> **Returns**: The enum name corresponding to the given value
-
-```cpp
-template <typename T>
-    requires std::is_enum_v<T>
-constexpr std::optional<T> find_enum_value(std::string_view name)
-```
-
-> **Returns**: The enum value corresponding to the given name
+> **Returns**: All values of the given enum `T` (specialize `rebind::search_min` / `rebind::search_max` to tweak the search range)  
