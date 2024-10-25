@@ -56,7 +56,8 @@ namespace rebind
         }();
 
         template <typename T>
-        consteval auto unpack_members()
+            requires std::is_aggregate_v<T>
+        static constexpr auto members = []
         {
             constexpr auto arity = rebind::arity<T>;
 
@@ -73,13 +74,6 @@ namespace rebind
             };
 
             return unpack_sequence(std::make_index_sequence<arity>());
-        }
-
-        template <typename T>
-            requires std::is_aggregate_v<T>
-        static constexpr auto members = []
-        {
-            return unpack_members<T>();
         }();
 
         template <auto T>
