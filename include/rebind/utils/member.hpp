@@ -10,15 +10,14 @@ namespace rebind::utils
             requires std::is_aggregate_v<T>
         static constexpr auto member_names = []
         {
-            constexpr auto size = std::tuple_size_v<decltype(rebind::members<T>)>;
+            constexpr auto arity = rebind::arity<T>;
 
             constexpr auto unpack = []<auto... Is>(std::index_sequence<Is...>)
             {
-                constexpr auto members = rebind::members<T>;
-                return std::array<std::string_view, sizeof...(Is)>{std::get<Is>(members).name...};
+                return std::array<std::string_view, sizeof...(Is)>{std::get<Is>(rebind::members<T>).name...};
             };
 
-            return unpack(std::make_index_sequence<size>());
+            return unpack(std::make_index_sequence<arity>());
         }();
     } // namespace impl
 
