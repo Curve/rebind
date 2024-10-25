@@ -12,14 +12,15 @@ namespace rebind::utils
             requires std::is_enum_v<T>
         static constexpr auto enum_names = []
         {
-            constexpr auto values = rebind::enum_values<T>;
+            constexpr auto size = rebind::enum_values<T>.size();
 
-            auto unpack = [&values]<auto... Is>(std::index_sequence<Is...>)
+            constexpr auto unpack = []<auto... Is>(std::index_sequence<Is...>)
             {
+                constexpr auto values = rebind::enum_values<T>;
                 return std::array<std::string_view, sizeof...(Is)>{rebind::enum_name<values[Is]>...};
             };
 
-            return unpack(std::make_index_sequence<values.size()>());
+            return unpack(std::make_index_sequence<size>());
         }();
 
         template <typename T>
