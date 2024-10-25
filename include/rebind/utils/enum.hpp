@@ -9,7 +9,6 @@ namespace rebind::utils
     namespace impl
     {
         template <typename T>
-            requires std::is_enum_v<T>
         static constexpr auto enum_names = []
         {
             constexpr auto size = rebind::enum_values<T>.size();
@@ -24,7 +23,6 @@ namespace rebind::utils
         }();
 
         template <typename T>
-            requires std::is_enum_v<T>
         constexpr std::optional<T> find_enum_value(std::string_view name)
         {
             constexpr auto values = rebind::enum_values<T>;
@@ -44,7 +42,6 @@ namespace rebind::utils
         }
 
         template <typename T>
-            requires std::is_enum_v<T>
         constexpr std::optional<std::string_view> find_enum_name(T value)
         {
             constexpr auto values = rebind::enum_values<T>;
@@ -65,15 +62,18 @@ namespace rebind::utils
     } // namespace impl
 
     template <typename T>
+        requires std::is_enum_v<T>
     static constexpr auto enum_names = impl::enum_names<T>;
 
     template <typename T>
+        requires std::is_enum_v<T>
     constexpr auto find_enum_value(std::string_view name)
     {
         return impl::find_enum_value<T>(name);
     }
 
     template <typename T>
+        requires std::is_enum_v<T>
     constexpr auto find_enum_name(T value)
     {
         return impl::find_enum_name(value);

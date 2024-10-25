@@ -7,7 +7,6 @@ namespace rebind::utils
     namespace impl
     {
         template <typename T>
-            requires std::is_aggregate_v<T>
         static constexpr auto member_names = []
         {
             constexpr auto arity = rebind::arity<T>;
@@ -22,5 +21,6 @@ namespace rebind::utils
     } // namespace impl
 
     template <typename T>
+        requires std::is_aggregate_v<T>
     static constexpr auto member_names = impl::member_names<T>;
 } // namespace rebind::utils

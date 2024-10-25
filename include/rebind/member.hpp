@@ -56,7 +56,6 @@ namespace rebind
         }();
 
         template <typename T>
-            requires std::is_aggregate_v<T>
         static constexpr auto members = []
         {
             constexpr auto arity = rebind::arity<T>;
@@ -77,7 +76,6 @@ namespace rebind
         }();
 
         template <auto T>
-            requires std::is_member_pointer_v<decltype(T)>
         static constexpr auto member_name = []
         {
             constexpr auto name = rebind::nttp_name<T>;
@@ -91,8 +89,10 @@ namespace rebind
     } // namespace impl
 
     template <typename T>
+        requires std::is_aggregate_v<T>
     static constexpr auto members = impl::members<T>;
 
     template <auto T>
+        requires std::is_member_pointer_v<decltype(T)>
     static constexpr auto member_name = impl::member_name<T>;
 } // namespace rebind

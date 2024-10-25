@@ -17,7 +17,6 @@ namespace rebind
         };
 
         template <typename T, typename... Us>
-            requires std::is_aggregate_v<T>
         consteval auto arity(Us &&...args)
         {
             if constexpr (requires { T{args...}; })
@@ -29,7 +28,6 @@ namespace rebind
         }
 
         template <typename T>
-            requires std::is_aggregate_v<T>
         constexpr auto to_tuple(T &value) // NOLINT(*-function-size)
         {
             constexpr auto N = arity<T>();
@@ -56,9 +54,11 @@ namespace rebind
     } // namespace impl
 
     template <typename T>
+        requires std::is_aggregate_v<T>
     static constexpr auto arity = impl::arity<T>();
 
     template <typename T>
+        requires std::is_aggregate_v<T>
     constexpr auto to_tuple(T &value)
     {
         return impl::to_tuple(value);
