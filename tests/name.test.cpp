@@ -23,7 +23,7 @@ struct some_class
 };
 
 // NOLINTNEXTLINE
-suite<"name"> name_test = []()
+suite<"name"> name_test = []
 {
     expect(rebind::type_name<int> == "int");
     expect(rebind::type_name<float> == "float");

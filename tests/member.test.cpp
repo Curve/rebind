@@ -1,5 +1,7 @@
 #include <boost/ut.hpp>
+
 #include <rebind/member.hpp>
+#include <rebind/utils/member.hpp>
 
 using namespace boost::ut;
 
@@ -16,7 +18,7 @@ struct simple
 };
 
 // NOLINTNEXTLINE
-suite<"member"> member_test = []()
+suite<"member"> member_test = []
 {
     expect(rebind::arity<simple> == 4);
 
@@ -26,14 +28,21 @@ suite<"member"> member_test = []()
     expect(rebind::member_name<&simple::inner> == "inner");
 
     static constexpr auto members = rebind::members<simple>;
+    static constexpr auto names   = rebind::utils::member_names<simple>;
 
     expect(std::tuple_size_v<decltype(members)> == 4);
+    expect(names.size() == 4);
 
     expect(std::get<0>(members).name == "x");
     expect(std::get<1>(members).name == "y");
     expect(std::get<2>(members).name == "z");
 
+    expect(names[0] == "x");
+    expect(names[1] == "y");
+    expect(names[2] == "z");
+
     expect(std::get<3>(members).name == "inner");
+    expect(names[3] == "inner");
 
     expect(std::get<0>(members).index == 0);
     expect(std::get<1>(members).index == 1);
