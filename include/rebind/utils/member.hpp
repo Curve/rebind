@@ -21,6 +21,20 @@ namespace rebind::utils
     namespace impl
     {
         template <typename T>
+        using member_types = decltype([]
+        {
+            constexpr auto arity = rebind::arity<T>;
+            using members        = decltype(rebind::members<T>);
+
+            constexpr auto unpack = []<auto... Is>(std::index_sequence<Is...>)
+            {
+                return std::type_identity<std::tuple<typename std::tuple_element_t<Is, members>::type...>>{};
+            };
+
+            return unpack(std::make_index_sequence<arity>());
+        }())::type;
+
+        template <typename T>
         static constexpr auto member_names = []
         {
             constexpr auto arity = rebind::arity<T>;
@@ -44,6 +58,10 @@ namespace rebind::utils
             return unpack(P);
         }();
     } // namespace impl
+
+    template <typename T>
+        requires std::is_aggregate_v<T>
+    using member_types = impl::member_types<T>;
 
     template <typename T>
         requires std::is_aggregate_v<T>

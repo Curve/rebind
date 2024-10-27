@@ -37,9 +37,11 @@ suite<"member"> member_test = []
     expect(info.value == &simple::y);
 
     static constexpr auto members = rebind::members<simple>;
+    using member_types            = rebind::utils::member_types<simple>;
     static constexpr auto names   = rebind::utils::member_names<simple>;
 
     expect(std::tuple_size_v<decltype(members)> == 4);
+    expect(std::tuple_size_v<member_types> == 4);
     expect(names.size() == 4);
 
     expect(std::get<0>(members).name == "x");
@@ -58,6 +60,11 @@ suite<"member"> member_test = []
     expect(std::get<2>(members).index == 2);
 
     expect(std::get<3>(members).index == 3);
+
+    expect(std::same_as<std::tuple_element_t<0, member_types>, int>);
+    expect(std::same_as<std::tuple_element_t<1, member_types>, float>);
+    expect(std::same_as<std::tuple_element_t<2, member_types>, double>);
+    expect(std::is_class_v<std::tuple_element_t<3, member_types>>);
 
     expect(std::same_as<std::tuple_element_t<0, decltype(members)>::type, int>);
     expect(std::same_as<std::tuple_element_t<1, decltype(members)>::type, float>);
