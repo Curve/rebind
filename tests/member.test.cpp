@@ -27,6 +27,15 @@ suite<"member"> member_test = []
     expect(rebind::member_name<&simple::z> == "z");
     expect(rebind::member_name<&simple::inner> == "inner");
 
+    static constexpr auto info = rebind::utils::member_info<&simple::y>;
+
+    expect(std::same_as<decltype(info)::type, decltype(&simple::y)>);
+    expect(std::same_as<decltype(info)::class_type, simple>);
+    expect(std::same_as<decltype(info)::value_type, float>);
+
+    expect(info.name == "y");
+    expect(info.value == &simple::y);
+
     static constexpr auto members = rebind::members<simple>;
     static constexpr auto names   = rebind::utils::member_names<simple>;
 

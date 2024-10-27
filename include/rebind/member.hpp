@@ -75,14 +75,14 @@ namespace rebind
             return unpack_sequence(std::make_index_sequence<arity>());
         }();
 
-        template <auto T>
+        template <auto P>
         static constexpr auto member_name = []
         {
-            constexpr auto name = rebind::nttp_name<T>;
-            constexpr auto type = []<class C>(auto C::*)
+            constexpr auto name = rebind::nttp_name<P>;
+            constexpr auto type = []<typename T>(auto T::*)
             {
-                return rebind::type_name<C>;
-            }(T);
+                return rebind::type_name<T>;
+            }(P);
 
             return remove_type(name, type, "::");
         }();
@@ -92,7 +92,7 @@ namespace rebind
         requires std::is_aggregate_v<T>
     static constexpr auto members = impl::members<T>;
 
-    template <auto T>
-        requires std::is_member_pointer_v<decltype(T)>
-    static constexpr auto member_name = impl::member_name<T>;
+    template <auto P>
+        requires std::is_member_pointer_v<decltype(P)>
+    static constexpr auto member_name = impl::member_name<P>;
 } // namespace rebind
