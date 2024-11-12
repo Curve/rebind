@@ -75,7 +75,7 @@ template <typename T>
 static constexpr auto members = /*...*/;
 ```
 
-> **Returns**: A `rebind::member` object for each member present in the aggregate
+> **Returns**: A `rebind::member` object for each member present in the aggregate  
 > **Contains**: The `type`, `name` and `index`
 
 ```cpp
