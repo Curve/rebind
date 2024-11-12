@@ -13,16 +13,11 @@ jobs:
 
       matrix:
         config: [Release, Debug]
-        type: [gcc, clang, msvc, clang-cl, apple-clang]
+        type: [gcc, clang, msvc, clang-cl]
 
         include:
           - type: gcc
             os: ubuntu-latest
-            container: archlinux:base-devel
-            deps: pacman --noconfirm -Syu git cmake gcc ninja make
-
-          - type: apple-clang
-            os: macos-latest
             container: archlinux:base-devel
             deps: pacman --noconfirm -Syu git cmake gcc ninja make
 

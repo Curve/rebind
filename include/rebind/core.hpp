@@ -8,6 +8,12 @@ namespace rebind::impl
     template <auto I>
     using constant = std::integral_constant<decltype(I), I>;
 
+    template <typename T>
+    consteval std::string_view mangled_name()
+    {
+        return std::source_location::current().function_name();
+    }
+
     template <auto T>
     consteval std::string_view mangled_name()
     {

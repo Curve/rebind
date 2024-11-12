@@ -39,12 +39,19 @@ namespace rebind
             const T *value;
         };
 
+        template <typename T>
+        consteval auto make_pointer(T &&value)
+        {
+            return pointer<std::remove_cvref_t<T>>{&value};
+        }
+
         struct unmangle_me
         {
             int find_me;
         };
 
-        static constexpr auto member_decorators = name_decorators<pointer{&member_at<unmangle_me, 0>()}>("find_me");
+        static constexpr auto member_decorators =
+            name_decorators(mangled_name<make_pointer(member_at<unmangle_me, 0>())>(), "find_me");
 
         template <auto T>
         static constexpr auto unmangle_member = []
@@ -64,7 +71,7 @@ namespace rebind
             {
                 constexpr auto &member = member_at<T, I>();
                 using member_t         = std::remove_cvref_t<decltype(member)>;
-                return rebind::member<member_t>{.index = I, .name = unmangle_member<pointer{&member}>};
+                return rebind::member<member_t>{.index = I, .name = unmangle_member<make_pointer(member)>};
             };
 
             const auto unpack_sequence = [unpack]<auto... Is>(std::index_sequence<Is...>)
