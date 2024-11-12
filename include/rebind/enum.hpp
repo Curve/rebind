@@ -17,7 +17,7 @@ namespace rebind
     {
         using underlying     = std::underlying_type_t<T>;
         constexpr auto limit = std::numeric_limits<underlying>::min();
-        return static_cast<underlying>(std::max(static_cast<std::intmax_t>(limit), static_cast<std::intmax_t>(-128)));
+        return static_cast<underlying>(std::max(static_cast<std::intmax_t>(limit), static_cast<std::intmax_t>(-64)));
     }();
 
     template <typename T>
@@ -26,7 +26,7 @@ namespace rebind
     {
         using underlying     = std::underlying_type_t<T>;
         constexpr auto limit = std::numeric_limits<underlying>::max();
-        return static_cast<underlying>(std::min(static_cast<std::intmax_t>(limit), static_cast<std::intmax_t>(128)));
+        return static_cast<underlying>(std::min(static_cast<std::intmax_t>(limit), static_cast<std::intmax_t>(64)));
     }();
 
     namespace impl
@@ -43,7 +43,7 @@ namespace rebind
             return remove_type(name, type, "::");
         }();
 
-        template <typename T, auto I, auto Max, typename State = std::tuple<>>
+        template <typename T, auto I, auto Max, auto... State>
         consteval auto search_enum_values()
         {
             if constexpr (I < Max)
@@ -53,29 +53,23 @@ namespace rebind
 
                 if constexpr (valid)
                 {
-                    constexpr auto new_state = std::tuple_cat(State{}, std::tuple{constant<value>{}});
-                    return search_enum_values<T, I + 1, Max, decltype(new_state)>();
+                    return search_enum_values<T, I + 1, Max, State..., value>();
                 }
                 else
                 {
-                    return search_enum_values<T, I + 1, Max, State>();
+                    return search_enum_values<T, I + 1, Max, State...>();
                 }
             }
             else
             {
-                return State{};
+                return std::array<T, sizeof...(State)>{State...};
             }
         }
 
         template <typename T>
         static constexpr auto enum_values = []
         {
-            constexpr auto unpack = []<auto... Is>(std::tuple<constant<Is>...>)
-            {
-                return std::array<T, sizeof...(Is)>{Is...};
-            };
-
-            return unpack(search_enum_values<T, search_min<T>, search_max<T>>());
+            return search_enum_values<T, search_min<T>, search_max<T>>();
         }();
     } // namespace impl
 
