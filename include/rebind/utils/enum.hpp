@@ -28,7 +28,7 @@ namespace rebind::utils
             constexpr auto values = rebind::enum_values<T>;
             constexpr auto names  = enum_names<T>;
 
-            for (auto i = 0; names.size() > i; ++i)
+            for (auto i = 0u; names.size() > i; ++i)
             {
                 if (names[i] != name)
                 {
@@ -47,7 +47,7 @@ namespace rebind::utils
             constexpr auto values = rebind::enum_values<T>;
             constexpr auto names  = enum_names<T>;
 
-            for (auto i = 0; names.size() > i; ++i)
+            for (auto i = 0u; names.size() > i; ++i)
             {
                 if (values[i] != value)
                 {
