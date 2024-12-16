@@ -3,7 +3,6 @@
 #include "name.hpp"
 
 #include <array>
-#include <tuple>
 #include <cmath>
 
 #include <cstdint>
@@ -12,7 +11,7 @@
 namespace rebind
 {
     template <typename T>
-        requires std::is_enum_v<T>
+        requires std::is_scoped_enum_v<T>
     static constexpr auto search_min = []
     {
         using underlying     = std::underlying_type_t<T>;
@@ -21,7 +20,7 @@ namespace rebind
     }();
 
     template <typename T>
-        requires std::is_enum_v<T>
+        requires std::is_scoped_enum_v<T>
     static constexpr auto search_max = []
     {
         using underlying     = std::underlying_type_t<T>;
@@ -32,7 +31,7 @@ namespace rebind
     namespace impl
     {
         template <auto T>
-        concept is_enum_value = std::is_enum_v<decltype(T)>;
+        concept is_scoped_enum_value = std::is_scoped_enum_v<decltype(T)>;
 
         template <auto T>
         static constexpr auto enum_name = []
@@ -74,10 +73,10 @@ namespace rebind
     } // namespace impl
 
     template <auto T>
-        requires impl::is_enum_value<T>
+        requires impl::is_scoped_enum_value<T>
     static constexpr auto enum_name = impl::enum_name<T>;
 
     template <typename T>
-        requires std::is_enum_v<T>
+        requires std::is_scoped_enum_v<T>
     static constexpr auto enum_values = impl::enum_values<T>;
 } // namespace rebind

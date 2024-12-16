@@ -62,18 +62,18 @@ namespace rebind::utils
     } // namespace impl
 
     template <typename T>
-        requires std::is_enum_v<T>
+        requires std::is_scoped_enum_v<T>
     static constexpr auto enum_names = impl::enum_names<T>;
 
     template <typename T>
-        requires std::is_enum_v<T>
+        requires std::is_scoped_enum_v<T>
     constexpr auto find_enum_value(std::string_view name)
     {
         return impl::find_enum_value<T>(name);
     }
 
     template <typename T>
-        requires std::is_enum_v<T>
+        requires std::is_scoped_enum_v<T>
     constexpr auto find_enum_name(T value)
     {
         return impl::find_enum_name(value);
