@@ -13,7 +13,7 @@ This library is fully compiler agnostic as it figures out how to demangle given 
   ```cmake
   CPMFindPackage(
     NAME           rebind
-    VERSION        5.0.0
+    VERSION        5.1.0
     GIT_REPOSITORY "https://github.com/Curve/rebind"
   )
   ```
