@@ -22,12 +22,15 @@ namespace rebind
 #pragma clang diagnostic ignored "-Weverything"
 #endif
         template <typename T>
-        extern const T dummy;
+        struct dummy
+        {
+            static const T value;
+        };
 
         template <typename T, std::size_t I>
         consteval decltype(auto) member_at()
         {
-            return std::get<I>(to_tuple(dummy<T>));
+            return std::get<I>(to_tuple(dummy<T>::value));
         };
 #ifdef __clang__
 #pragma clang diagnostic pop
