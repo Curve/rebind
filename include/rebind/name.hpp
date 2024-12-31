@@ -6,11 +6,12 @@ namespace rebind
 {
     namespace impl
     {
+        template <bool Partial = false>
         consteval auto name_decorators(std::string_view mangled, std::string_view needle)
         {
             const auto start = mangled.find(needle);
 
-            const auto prefix = mangled.substr(start - 1, 1);
+            const auto prefix = Partial ? mangled.substr(start - 1, 1) : mangled.substr(0, start);
             const auto suffix = mangled.substr(start + needle.size());
 
             return std::make_pair(prefix, suffix);

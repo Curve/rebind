@@ -54,7 +54,7 @@ namespace rebind
         };
 
         static constexpr auto member_decorators =
-            name_decorators(mangled_name<make_pointer(member_at<unmangle_me, 0>())>(), "find_me");
+            name_decorators<true>(mangled_name<make_pointer(member_at<unmangle_me, 0>())>(), "find_me");
 
         template <auto T>
         static constexpr auto unmangle_member = []
