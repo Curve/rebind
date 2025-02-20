@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(rebind LANGUAGES CXX VERSION 5.2.0)
+project(rebind LANGUAGES CXX VERSION 5.2.1)
 
 # --------------------------------------------------------------------------------------------------------
 # Library options

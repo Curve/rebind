@@ -2,6 +2,8 @@
 
 #include "../member.hpp"
 
+#include <array>
+
 namespace rebind::utils
 {
     template <typename V, typename C>
