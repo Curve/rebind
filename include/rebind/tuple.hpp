@@ -13,7 +13,7 @@ namespace rebind
         struct universal
         {
             template <typename T>
-            constexpr operator T() const;
+            operator T() const;
         };
 
         template <typename T, typename... Us>
@@ -21,7 +21,7 @@ namespace rebind
         {
             if constexpr (requires { T{args...}; })
             {
-                return arity<T>(args..., universal{});
+                return arity<T>(std::forward<Us>(args)..., universal{});
             }
 
             return sizeof...(args) - 1;
