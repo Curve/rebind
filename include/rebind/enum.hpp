@@ -3,10 +3,8 @@
 #include "name.hpp"
 
 #include <array>
-#include <cmath>
-
-#include <cstdint>
 #include <limits>
+#include <cstdint>
 
 namespace rebind
 {
@@ -42,8 +40,8 @@ namespace rebind
             return remove_type(name, type, "::");
         }();
 
-        template <typename T, auto I, auto Max, auto... State>
-        consteval auto search_enum_values()
+        template <typename T, auto I = search_min<T>, auto Max = search_max<T>, auto... State>
+        static constexpr auto enum_values = []
         {
             if constexpr (I < Max)
             {
@@ -52,23 +50,17 @@ namespace rebind
 
                 if constexpr (valid)
                 {
-                    return search_enum_values<T, I + 1, Max, State..., value>();
+                    return enum_values<T, I + 1, Max, State..., value>;
                 }
                 else
                 {
-                    return search_enum_values<T, I + 1, Max, State...>();
+                    return enum_values<T, I + 1, Max, State...>;
                 }
             }
             else
             {
                 return std::array<T, sizeof...(State)>{State...};
             }
-        }
-
-        template <typename T>
-        static constexpr auto enum_values = []
-        {
-            return search_enum_values<T, search_min<T>, search_max<T>>();
         }();
     } // namespace impl
 
