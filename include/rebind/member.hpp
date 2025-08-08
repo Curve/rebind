@@ -43,7 +43,7 @@ namespace rebind
         };
 
         template <typename T>
-        consteval auto make_pointer(T &&value)
+        consteval auto make_pointer(T &value)
         {
             return pointer<std::remove_cvref_t<T>>{&value};
         }

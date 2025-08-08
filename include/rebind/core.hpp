@@ -21,7 +21,7 @@ namespace rebind::impl
     }
 
     template <typename U>
-    consteval auto unmangle(std::string_view name, U decorators)
+    constexpr auto unmangle(std::string_view name, U decorators)
     {
         const auto start = name.substr(0, name.rfind(decorators.second));
         const auto end   = start.substr(start.rfind(decorators.first) + decorators.first.size());
@@ -30,7 +30,7 @@ namespace rebind::impl
     }
 
     template <typename... Ts>
-    consteval auto remove_prefix(std::string_view name, Ts &&...prefixes)
+    constexpr auto remove_prefix(std::string_view name, const Ts &...prefixes)
     {
         const auto has_prefix = (name.starts_with(prefixes) || ...);
 
@@ -42,7 +42,7 @@ namespace rebind::impl
         return name.substr(name.find(' ') + 1);
     }
 
-    consteval auto remove_type(std::string_view name, std::string_view type, std::string_view delim)
+    constexpr auto remove_type(std::string_view name, std::string_view type, std::string_view delim)
     {
         const auto start = name.substr(name.rfind(type) + type.size());
         const auto end   = start.rfind(delim);

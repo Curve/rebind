@@ -6,7 +6,7 @@ namespace rebind::utils
 {
     namespace impl
     {
-        consteval auto remove_namespace(std::string_view name)
+        constexpr auto remove_namespace(std::string_view name)
         {
             const auto start = name.rfind("::");
 
