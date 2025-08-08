@@ -45,7 +45,7 @@ namespace rebind::impl
     constexpr auto remove_type(std::string_view name, std::string_view type, std::string_view delim)
     {
         const auto start = name.substr(name.rfind(type) + type.size());
-        const auto end   = start.rfind(delim);
+        const auto end   = start.find(delim);
 
         if (end == std::string_view::npos)
         {
